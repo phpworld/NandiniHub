@@ -138,6 +138,33 @@
                                 <small class="d-block text-muted">Pay securely using UPI, Cards, or Net Banking</small>
                             </label>
                         </div>
+
+                        <!-- Online Payment Details -->
+                        <div id="online_payment_details" class="mt-3" style="display: none;">
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-info-circle me-2"></i>Online Payment Features:</h6>
+                                <ul class="mb-0">
+                                    <li><strong>Secure Gateway:</strong> HDFC Bank Payment Gateway</li>
+                                    <li><strong>Payment Options:</strong> Credit/Debit Cards, UPI, Net Banking, Wallets</li>
+                                    <li><strong>Security:</strong> 256-bit SSL encryption</li>
+                                    <li><strong>Instant Confirmation:</strong> Order confirmed immediately after payment</li>
+                                </ul>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-3">
+                                    <i class="fab fa-cc-visa fa-2x text-primary"></i>
+                                </div>
+                                <div class="col-3">
+                                    <i class="fab fa-cc-mastercard fa-2x text-warning"></i>
+                                </div>
+                                <div class="col-3">
+                                    <i class="fas fa-university fa-2x text-success"></i>
+                                </div>
+                                <div class="col-3">
+                                    <i class="fas fa-mobile-alt fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -213,7 +240,7 @@
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-credit-card"></i> Place Order
+                                <i class="fas fa-shopping-bag"></i> Place Order
                             </button>
                             <a href="<?= base_url('cart') ?>" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left"></i> Back to Cart
@@ -289,6 +316,22 @@
         billingAddressField.value = this.value;
     });
 
+    // Handle payment method selection
+    document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            const onlineDetails = document.getElementById('online_payment_details');
+            const submitBtn = document.querySelector('button[type="submit"]');
+
+            if (this.value === 'online') {
+                onlineDetails.style.display = 'block';
+                submitBtn.innerHTML = '<i class="fas fa-credit-card"></i> Proceed to Payment';
+            } else {
+                onlineDetails.style.display = 'none';
+                submitBtn.innerHTML = '<i class="fas fa-shopping-bag"></i> Place Order';
+            }
+        });
+    });
+
     // Form validation before submission
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
         const shippingAddress = document.getElementById('shipping_address').value.trim();
@@ -310,7 +353,12 @@
         // Show loading state
         const submitBtn = document.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing Order...';
+
+        if (paymentMethod.value === 'online') {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Order...';
+        } else {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing Order...';
+        }
         submitBtn.disabled = true;
 
         // Re-enable button after 10 seconds (in case of error)

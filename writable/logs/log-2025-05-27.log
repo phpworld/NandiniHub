@@ -1,1 +1,71 @@
 
+ERROR - 2025-05-27 08:46:54 --> mysqli_sql_exception: Duplicate key name 'transaction_id' in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('CREATE TABLE `p...', 0)
+#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `p...')
+#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `p...')
+#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `p...')
+#4 I:\xampp\htdocs\nandinihub\app\Database\Migrations\2024-01-01-000009_CreatePaymentTransactionsTable.php(98): CodeIgniter\Database\Forge->createTable('payment_transac...')
+#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MigrationRunner.php(876): App\Database\Migrations\CreatePaymentTransactionsTable->up()
+#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MigrationRunner.php(182): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+#7 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(360): CodeIgniter\CLI\Console->run()
+#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(104): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 I:\xampp\htdocs\nandinihub\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+ERROR - 2025-05-27 08:53:50 --> Payment initiation failed: Undefined array key "transaction_id"
+ERROR - 2025-05-27 08:59:55 --> Payment initiation failed: Undefined array key "transaction_id"
+ERROR - 2025-05-27 09:00:55 --> Payment initiation failed: Undefined array key "transaction_id"
+ERROR - 2025-05-27 09:10:21 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
+#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
+#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
+#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
+#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
+#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
+#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(419): CodeIgniter\Model->insert(Array)
+#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
+#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
+#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 I:\xampp\htdocs\nandinihub\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+ERROR - 2025-05-27 09:13:54 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
+#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
+#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
+#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
+#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
+#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
+#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(426): CodeIgniter\Model->insert(Array)
+#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
+#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
+#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 I:\xampp\htdocs\nandinihub\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+ERROR - 2025-05-27 09:14:54 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
+#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
+#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
+#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
+#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
+#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
+#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(426): CodeIgniter\Model->insert(Array)
+#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
+#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
+#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 I:\xampp\htdocs\nandinihub\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}

@@ -41,6 +41,17 @@ $routes->get('/checkout', 'OrderController::checkout');
 $routes->post('/checkout', 'OrderController::processCheckout');
 $routes->post('/orders/cancel/(:segment)', 'OrderController::cancelOrder/$1');
 
+// Payment routes
+$routes->group('payment', function ($routes) {
+    $routes->post('initiate', 'PaymentController::initiate');
+    $routes->get('process/(:segment)', 'PaymentController::process/$1');
+    $routes->post('callback', 'PaymentController::callback');
+    $routes->get('success/(:segment)', 'PaymentController::success/$1');
+    $routes->get('failure/(:segment)', 'PaymentController::failure/$1');
+    $routes->post('verify/(:segment)', 'PaymentController::verify/$1');
+    $routes->get('test', 'PaymentController::test'); // Debug route
+});
+
 // Review routes
 $routes->get('/product/(:segment)/review', 'ReviewController::create/$1');
 $routes->post('/reviews', 'ReviewController::store');

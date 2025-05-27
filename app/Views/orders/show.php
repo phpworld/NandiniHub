@@ -201,12 +201,40 @@
                                 <strong>Method:</strong>
                                 <?= $order['payment_method'] == 'cod' ? 'Cash on Delivery' : 'Online Payment' ?>
                             </p>
-                            <p class="mb-0">
+                            <p class="mb-3">
                                 <strong>Status:</strong>
                                 <span class="badge bg-<?= $order['payment_status'] == 'paid' ? 'success' : ($order['payment_status'] == 'pending' ? 'warning' : 'danger') ?>">
                                     <?= ucfirst($order['payment_status']) ?>
                                 </span>
                             </p>
+
+                            <?php if ($order['payment_method'] == 'online' && $order['payment_status'] == 'pending'): ?>
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Payment Required</strong><br>
+                                    Your order is pending payment. Please complete the payment to confirm your order.
+                                </div>
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary" onclick="initiatePayment(<?= $order['id'] ?>)">
+                                        <i class="fas fa-credit-card me-2"></i>Pay Now
+                                    </button>
+                                </div>
+                            <?php elseif ($order['payment_method'] == 'online' && $order['payment_status'] == 'paid'): ?>
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    Payment completed successfully. Your order is confirmed.
+                                </div>
+                            <?php elseif ($order['payment_method'] == 'online' && $order['payment_status'] == 'failed'): ?>
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-times-circle me-2"></i>
+                                    Payment failed. Please try again or contact support.
+                                </div>
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary" onclick="initiatePayment(<?= $order['id'] ?>)">
+                                        <i class="fas fa-redo me-2"></i>Retry Payment
+                                    </button>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -396,6 +424,42 @@
         }
     }
 
+    // Payment initiation function
+    function initiatePayment(orderId) {
+        // Show loading state
+        const payBtn = event.target;
+        const originalText = payBtn.innerHTML;
+        payBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Initiating Payment...';
+        payBtn.disabled = true;
+
+        // Call payment initiation API
+        fetch('<?= base_url('payment/initiate') ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: `order_id=${orderId}&<?= csrf_token() ?>=<?= csrf_hash() ?>`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to payment processing page
+                window.location.href = data.payment_url;
+            } else {
+                alert('Failed to initiate payment: ' + data.message);
+                payBtn.innerHTML = originalText;
+                payBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+            payBtn.innerHTML = originalText;
+            payBtn.disabled = false;
+        });
+    }
+
     // Auto-hide flash messages after 5 seconds
     setTimeout(function() {
         const alerts = document.querySelectorAll('.alert');
@@ -407,6 +471,20 @@
             }
         });
     }, 5000);
+
+    // Check for payment parameter in URL and show payment button if needed
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'pending') {
+        // Scroll to payment section
+        const paymentCard = document.querySelector('.card:has(.btn-primary)');
+        if (paymentCard) {
+            paymentCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            paymentCard.style.border = '2px solid #0d6efd';
+            setTimeout(() => {
+                paymentCard.style.border = '';
+            }, 3000);
+        }
+    }
 </script>
 
 <?php

@@ -231,11 +231,17 @@ class OrderController extends BaseController
 
             log_message('info', 'Order completed successfully: ' . $order['order_number']);
 
-            // Send order confirmation email
-            $this->sendOrderConfirmationEmail($order, $cartItems);
-
-            session()->setFlashdata('success', 'Order placed successfully! Order number: ' . $order['order_number']);
-            return redirect()->to('/orders/' . $order['order_number']);
+            // Handle different payment methods
+            if ($order['payment_method'] === 'online') {
+                // For online payment, redirect to payment initiation
+                session()->setFlashdata('info', 'Order created successfully! Please complete the payment to confirm your order.');
+                return redirect()->to('/orders/' . $order['order_number'] . '?payment=pending');
+            } else {
+                // For COD, send confirmation email and redirect to order details
+                $this->sendOrderConfirmationEmail($order, $cartItems);
+                session()->setFlashdata('success', 'Order placed successfully! Order number: ' . $order['order_number']);
+                return redirect()->to('/orders/' . $order['order_number']);
+            }
         } catch (\Exception $e) {
             $db->transRollback();
             log_message('error', 'Order processing exception: ' . $e->getMessage());
