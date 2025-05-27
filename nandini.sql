@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: May 26, 2025 at 07:20 PM
--- Server version: 8.0.40-cll-lve
--- PHP Version: 8.1.27
+-- Host: 127.0.0.1
+-- Generation Time: May 27, 2025 at 07:06 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `exportmarket_nandini`
+-- Database: `nandini`
 --
 
 -- --------------------------------------------------------
@@ -28,11 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `cart` (
-  `id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED DEFAULT NULL,
-  `session_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `product_id` int UNSIGNED NOT NULL,
-  `quantity` int NOT NULL DEFAULT '1',
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `session_id` varchar(255) DEFAULT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
   `price` decimal(10,2) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
@@ -43,7 +43,6 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`id`, `user_id`, `session_id`, `product_id`, `quantity`, `price`, `created_at`, `updated_at`) VALUES
-(8, 1, NULL, 2, 1, 65.00, '2025-05-26 12:51:27', '2025-05-26 12:51:27'),
 (18, NULL, 'ed1ef4961384e873e2d301769aa0b1de', 1, 1, 40.00, '2025-05-26 13:11:15', '2025-05-26 13:11:15'),
 (19, NULL, 'ed1ef4961384e873e2d301769aa0b1de', 3, 1, 30.00, '2025-05-26 13:11:20', '2025-05-26 13:11:20');
 
@@ -54,13 +53,13 @@ INSERT INTO `cart` (`id`, `user_id`, `session_id`, `product_id`, `quantity`, `pr
 --
 
 CREATE TABLE `categories` (
-  `id` int UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `sort_order` int NOT NULL DEFAULT '0',
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -86,13 +85,13 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `image`, `is_acti
 --
 
 CREATE TABLE `migrations` (
-  `id` bigint UNSIGNED NOT NULL,
-  `version` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `class` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `group` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `namespace` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `time` int NOT NULL,
-  `batch` int UNSIGNED NOT NULL
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `version` varchar(255) NOT NULL,
+  `class` varchar(255) NOT NULL,
+  `group` varchar(255) NOT NULL,
+  `namespace` varchar(255) NOT NULL,
+  `time` int(11) NOT NULL,
+  `batch` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -116,19 +115,19 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 --
 
 CREATE TABLE `orders` (
-  `id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `order_number` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` enum('pending','processing','shipped','delivered','cancelled') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'pending',
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `order_number` varchar(50) NOT NULL,
+  `status` enum('pending','processing','shipped','delivered','cancelled') NOT NULL DEFAULT 'pending',
   `total_amount` decimal(10,2) NOT NULL,
-  `shipping_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `tax_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_status` enum('pending','paid','failed','refunded') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'pending',
-  `shipping_address` text COLLATE utf8mb4_general_ci NOT NULL,
-  `billing_address` text COLLATE utf8mb4_general_ci NOT NULL,
-  `notes` text COLLATE utf8mb4_general_ci,
+  `shipping_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `tax_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `payment_status` enum('pending','paid','failed','refunded') NOT NULL DEFAULT 'pending',
+  `shipping_address` text NOT NULL,
+  `billing_address` text NOT NULL,
+  `notes` text DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -138,9 +137,10 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `order_number`, `status`, `total_amount`, `shipping_amount`, `tax_amount`, `discount_amount`, `payment_method`, `payment_status`, `shipping_address`, `billing_address`, `notes`, `created_at`, `updated_at`) VALUES
-(1, 3, 'ORD202505267592', 'pending', 268.30, 50.00, 33.30, 0.00, 'cod', 'pending', 'LGF 10 Anora kalan papnamow Road', 'LGF 10 Anora kalan papnamow Road', '', '2025-05-26 13:01:38', '2025-05-26 13:01:38'),
-(2, 3, 'ORD202505265186', 'pending', 720.98, 0.00, 109.98, 0.00, 'cod', 'pending', 'LGF 10 Anora kalan papnamow Road', 'LGF 10 Anora kalan papnamow Road', '', '2025-05-26 13:03:00', '2025-05-26 13:03:00'),
-(3, 3, 'ORD202505264505', 'pending', 114.90, 50.00, 9.90, 0.00, 'cod', 'pending', 'LGF 10 Anora kalan papnamow Road', 'LGF 10 Anora kalan papnamow Road', '', '2025-05-26 13:03:33', '2025-05-26 13:03:33');
+(1, 3, 'ORD202505267592', 'cancelled', 268.30, 50.00, 33.30, 0.00, 'cod', 'pending', 'LGF 10 Anora kalan papnamow Road', 'LGF 10 Anora kalan papnamow Road', '', '2025-05-26 13:01:38', '2025-05-26 15:28:25'),
+(2, 3, 'ORD202505265186', 'delivered', 720.98, 0.00, 109.98, 0.00, 'cod', 'pending', 'LGF 10 Anora kalan papnamow Road', 'LGF 10 Anora kalan papnamow Road', '', '2025-05-26 13:03:00', '2025-05-26 15:21:21'),
+(3, 3, 'ORD202505264505', 'delivered', 114.90, 50.00, 9.90, 0.00, 'cod', 'pending', 'LGF 10 Anora kalan papnamow Road', 'LGF 10 Anora kalan papnamow Road', '', '2025-05-26 13:03:33', '2025-05-26 15:21:03'),
+(4, 3, 'ORD202505275199', 'pending', 585.72, 50.00, 81.72, 0.00, 'online', 'pending', 'LGF 10 Anora kalan papnamow Road', 'LGF 10 Anora kalan papnamow Road', '', '2025-05-27 04:41:11', '2025-05-27 04:41:11');
 
 -- --------------------------------------------------------
 
@@ -149,12 +149,12 @@ INSERT INTO `orders` (`id`, `user_id`, `order_number`, `status`, `total_amount`,
 --
 
 CREATE TABLE `order_items` (
-  `id` int UNSIGNED NOT NULL,
-  `order_id` int UNSIGNED NOT NULL,
-  `product_id` int UNSIGNED NOT NULL,
-  `product_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `product_sku` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `quantity` int NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `order_id` int(10) UNSIGNED NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `product_sku` varchar(100) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -174,7 +174,9 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `prod
 (6, 2, 1, 'Nag Champa Agarbatti', 'N/A', 1, 40.00, 40.00, '2025-05-26 13:03:00', '2025-05-26 13:03:00'),
 (7, 2, 2, 'Sandalwood Agarbatti', 'N/A', 1, 65.00, 65.00, '2025-05-26 13:03:00', '2025-05-26 13:03:00'),
 (8, 2, 3, 'Mogra Agarbatti', 'N/A', 1, 30.00, 30.00, '2025-05-26 13:03:00', '2025-05-26 13:03:00'),
-(9, 3, 4, 'Traditional Dhoop Sticks', 'N/A', 1, 55.00, 55.00, '2025-05-26 13:03:33', '2025-05-26 13:03:33');
+(9, 3, 4, 'Traditional Dhoop Sticks', 'N/A', 1, 55.00, 55.00, '2025-05-26 13:03:33', '2025-05-26 13:03:33'),
+(10, 4, 6, 'Brass Puja Thali Set', 'N/A', 1, 399.00, 399.00, '2025-05-27 04:41:11', '2025-05-27 04:41:11'),
+(11, 4, 4, 'Traditional Dhoop Sticks', 'N/A', 1, 55.00, 55.00, '2025-05-27 04:41:11', '2025-05-27 04:41:11');
 
 -- --------------------------------------------------------
 
@@ -183,24 +185,24 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `prod
 --
 
 CREATE TABLE `products` (
-  `id` int UNSIGNED NOT NULL,
-  `category_id` int UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `short_description` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `category_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `short_description` varchar(500) DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
   `sale_price` decimal(10,2) DEFAULT NULL,
-  `sku` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `stock_quantity` int NOT NULL DEFAULT '0',
+  `sku` varchar(100) NOT NULL,
+  `stock_quantity` int(11) NOT NULL DEFAULT 0,
   `weight` decimal(8,2) DEFAULT NULL,
-  `dimensions` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `gallery` text COLLATE utf8mb4_general_ci,
-  `is_featured` tinyint(1) NOT NULL DEFAULT '0',
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `meta_title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `meta_description` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `dimensions` varchar(100) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `gallery` text DEFAULT NULL,
+  `is_featured` tinyint(1) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `meta_title` varchar(255) DEFAULT NULL,
+  `meta_description` varchar(500) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -211,11 +213,11 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `description`, `short_description`, `price`, `sale_price`, `sku`, `stock_quantity`, `weight`, `dimensions`, `image`, `gallery`, `is_featured`, `is_active`, `meta_title`, `meta_description`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Nag Champa Agarbatti', 'nag-champa-agarbatti', 'Premium quality Nag Champa incense sticks made from natural ingredients. Perfect for daily puja and meditation.', 'Premium Nag Champa incense sticks for daily worship', 45.00, 40.00, 'AGR001', 99, 0.15, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 13:03:00'),
-(2, 1, 'Sandalwood Agarbatti', 'sandalwood-agarbatti', 'Pure sandalwood incense sticks with authentic fragrance. Ideal for creating peaceful atmosphere during prayers.', 'Pure sandalwood incense sticks with authentic fragrance', 65.00, NULL, 'AGR002', 72, 0.15, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 13:03:00'),
+(2, 1, 'Sandalwood Agarbatti', 'sandalwood-agarbatti', 'Pure sandalwood incense sticks with authentic fragrance. Ideal for creating peaceful atmosphere during prayers.', 'Pure sandalwood incense sticks with authentic fragrance', 65.00, NULL, 'AGR002', 74, 0.15, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 15:28:25'),
 (3, 1, 'Mogra Agarbatti', 'mogra-agarbatti', 'Delicate mogra (jasmine) fragrance incense sticks. Perfect for evening prayers and special occasions.', 'Delicate mogra fragrance incense sticks', 35.00, 30.00, 'AGR003', 119, 0.15, NULL, NULL, NULL, 0, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 13:03:00'),
-(4, 2, 'Traditional Dhoop Sticks', 'traditional-dhoop-sticks', 'Handmade traditional dhoop sticks with natural herbs and resins. Creates thick aromatic smoke perfect for puja.', 'Handmade traditional dhoop sticks with natural herbs', 55.00, NULL, 'DHP001', 77, 0.20, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 13:03:33'),
+(4, 2, 'Traditional Dhoop Sticks', 'traditional-dhoop-sticks', 'Handmade traditional dhoop sticks with natural herbs and resins. Creates thick aromatic smoke perfect for puja.', 'Handmade traditional dhoop sticks with natural herbs', 55.00, NULL, 'DHP001', 77, 0.20, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-27 04:41:11'),
 (5, 2, 'Sambrani Cups', 'sambrani-cups', 'Ready-to-use sambrani cups made from pure benzoin resin. Just light and enjoy the divine fragrance.', 'Ready-to-use sambrani cups made from pure benzoin resin', 25.00, 22.00, 'SMB001', 149, 0.10, NULL, NULL, NULL, 0, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 13:03:00'),
-(6, 3, 'Brass Puja Thali Set', 'brass-puja-thali-set', 'Complete brass puja thali set with diya, incense holder, small bowls and decorative elements. Perfect for daily worship.', 'Complete brass puja thali set with all accessories', 450.00, 399.00, 'PTH001', 24, 0.80, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 13:03:00'),
+(6, 3, 'Brass Puja Thali Set', 'brass-puja-thali-set', 'Complete brass puja thali set with diya, incense holder, small bowls and decorative elements. Perfect for daily worship.', 'Complete brass puja thali set with all accessories', 450.00, 399.00, 'PTH001', 23, 0.80, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-27 04:41:11'),
 (7, 3, 'Silver Plated Puja Thali', 'silver-plated-puja-thali', 'Elegant silver plated puja thali with intricate designs. Ideal for special occasions and festivals.', 'Elegant silver plated puja thali with intricate designs', 850.00, NULL, 'PTH002', 15, 1.20, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 09:56:48'),
 (8, 4, 'Clay Diyas (Pack of 12)', 'clay-diyas-pack-12', 'Traditional handmade clay diyas perfect for Diwali and daily puja. Pack contains 12 pieces.', 'Traditional handmade clay diyas - pack of 12', 60.00, 50.00, 'DYA001', 200, 0.50, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-05-26 09:56:48', '2025-05-26 09:56:48');
 
@@ -226,16 +228,16 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `description`, `sho
 --
 
 CREATE TABLE `reviews` (
-  `id` int UNSIGNED NOT NULL,
-  `product_id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `order_id` int UNSIGNED DEFAULT NULL,
-  `rating` tinyint UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `review` text COLLATE utf8mb4_general_ci,
-  `is_verified` tinyint(1) NOT NULL DEFAULT '0',
-  `is_approved` tinyint(1) NOT NULL DEFAULT '1',
-  `helpful_count` int NOT NULL DEFAULT '0',
+  `id` int(10) UNSIGNED NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `order_id` int(10) UNSIGNED DEFAULT NULL,
+  `rating` tinyint(3) UNSIGNED NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `review` text DEFAULT NULL,
+  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `is_approved` tinyint(1) NOT NULL DEFAULT 1,
+  `helpful_count` int(11) NOT NULL DEFAULT 0,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -247,18 +249,18 @@ CREATE TABLE `reviews` (
 --
 
 CREATE TABLE `users` (
-  `id` int UNSIGNED NOT NULL,
-  `first_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `phone` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` text COLLATE utf8mb4_general_ci,
-  `city` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `state` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `pincode` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `role` enum('customer','admin') COLLATE utf8mb4_general_ci DEFAULT 'customer',
+  `id` int(10) UNSIGNED NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `pincode` varchar(10) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `role` enum('customer','admin') DEFAULT 'customer',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -353,49 +355,49 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
