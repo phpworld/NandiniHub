@@ -7,47 +7,51 @@ use CodeIgniter\Config\BaseConfig;
 class Payment extends BaseConfig
 {
     /**
-     * HDFC Payment Gateway Configuration
+     * HDFC SmartGateway Configuration (Powered by Juspay)
      */
     public array $hdfc = [
         // Test Environment Settings
         'test_mode' => true,
-        'test_merchant_id' => 'TEST_MERCHANT_ID',
-        'test_access_code' => 'TEST_ACCESS_CODE',
-        'test_working_key' => 'TEST_WORKING_KEY',
-        'test_gateway_url' => 'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction',
-        'test_redirect_url' => 'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction',
-        
+        'test_merchant_id' => 'test_merchant_hdfc',
+        'test_api_key' => 'test_api_key_here',
+        'test_gateway_url' => 'https://smartgatewayuat.hdfcbank.com',
+        'test_api_endpoint' => 'https://smartgatewayuat.hdfcbank.com',
+
         // Production Environment Settings (Use when going live)
         'live_merchant_id' => 'LIVE_MERCHANT_ID',
-        'live_access_code' => 'LIVE_ACCESS_CODE', 
-        'live_working_key' => 'LIVE_WORKING_KEY',
-        'live_gateway_url' => 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction',
-        'live_redirect_url' => 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction',
-        
+        'live_api_key' => 'LIVE_API_KEY',
+        'live_gateway_url' => 'https://smartgateway.hdfcbank.com',
+        'live_api_endpoint' => 'https://smartgateway.hdfcbank.com',
+
         // Common Settings
         'currency' => 'INR',
-        'language' => 'EN',
-        
+        'language' => 'en',
+        'country' => 'IN',
+
         // Callback URLs (will be dynamically set based on base_url)
-        'redirect_url' => '',
+        'return_url' => '',
+        'notify_url' => '',
         'cancel_url' => '',
-        
+
         // Payment Methods
         'payment_options' => [
-            'OPTCRDC' => 'Credit Card',
-            'OPTDBCRD' => 'Debit Card', 
-            'OPTNBK' => 'Net Banking',
-            'OPTUPINB' => 'UPI',
-            'OPTWLT' => 'Wallet'
+            'card' => 'Credit/Debit Card',
+            'nb' => 'Net Banking',
+            'upi' => 'UPI',
+            'wallet' => 'Wallet',
+            'emi' => 'EMI'
         ],
-        
+
         // Transaction Settings
         'timeout' => 300, // 5 minutes
         'max_amount' => 100000, // Rs. 1,00,000
         'min_amount' => 1, // Rs. 1
+
+        // API Settings
+        'api_version' => 'v1',
+        'request_timeout' => 30, // seconds
     ];
-    
+
     /**
      * Get current environment configuration
      */
@@ -55,35 +59,45 @@ class Payment extends BaseConfig
     {
         $config = $this->hdfc;
         $baseUrl = base_url();
-        
+
         if ($config['test_mode']) {
             $config['merchant_id'] = $config['test_merchant_id'];
-            $config['access_code'] = $config['test_access_code'];
-            $config['working_key'] = $config['test_working_key'];
+            $config['api_key'] = $config['test_api_key'];
             $config['gateway_url'] = $config['test_gateway_url'];
+            $config['api_endpoint'] = $config['test_api_endpoint'];
         } else {
             $config['merchant_id'] = $config['live_merchant_id'];
-            $config['access_code'] = $config['live_access_code'];
-            $config['working_key'] = $config['live_working_key'];
+            $config['api_key'] = $config['live_api_key'];
             $config['gateway_url'] = $config['live_gateway_url'];
+            $config['api_endpoint'] = $config['live_api_endpoint'];
         }
-        
+
         // Set callback URLs
-        $config['redirect_url'] = $baseUrl . 'payment/callback';
+        $config['return_url'] = $baseUrl . 'payment/callback';
+        $config['notify_url'] = $baseUrl . 'payment/webhook';
         $config['cancel_url'] = $baseUrl . 'payment/failure/cancelled';
-        
+
         return $config;
     }
-    
+
     /**
-     * Payment status mappings
+     * Payment status mappings for HDFC SmartGateway
      */
     public array $statusMapping = [
-        'Success' => 'paid',
-        'Failure' => 'failed', 
-        'Aborted' => 'failed',
-        'Invalid' => 'failed',
-        'Timeout' => 'failed',
-        'Cancelled' => 'failed'
+        'CHARGED' => 'success',
+        'PENDING' => 'pending',
+        'PENDING_VBV' => 'pending',
+        'AUTHORIZATION_FAILED' => 'failed',
+        'AUTHENTICATION_FAILED' => 'failed',
+        'JUSPAY_DECLINED' => 'failed',
+        'AUTHORIZING' => 'processing',
+        'COD_INITIATED' => 'pending',
+        'STARTED' => 'processing',
+        'AUTO_REFUNDED' => 'refunded',
+        'CAPTURE_INITIATED' => 'processing',
+        'CAPTURE_FAILED' => 'failed',
+        'VOID_INITIATED' => 'processing',
+        'VOIDED' => 'cancelled',
+        'NOT_FOUND' => 'failed'
     ];
 }

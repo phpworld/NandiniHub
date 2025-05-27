@@ -47,17 +47,56 @@
                         </div>
                     </div>
 
-                    <!-- Auto-submit form to payment gateway -->
-                    <form id="paymentForm" action="<?= esc($paymentRequest['gateway_url']) ?>" method="POST" style="display: none;">
-                        <input type="hidden" name="encRequest" value="<?= esc($paymentRequest['encRequest']) ?>">
-                        <input type="hidden" name="access_code" value="<?= esc($paymentRequest['access_code']) ?>">
-                    </form>
+                    <?php if (isset($paymentRequest['success']) && $paymentRequest['success']): ?>
+                        <!-- HDFC SmartGateway Payment Options -->
+                        <div class="mt-4">
+                            <?php if (!empty($paymentRequest['payment_page_url'])): ?>
+                                <!-- Direct payment page URL -->
+                                <div class="text-center">
+                                    <a href="<?= esc($paymentRequest['payment_page_url']) ?>" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-credit-card"></i> Proceed to Payment Gateway
+                                    </a>
+                                </div>
+                            <?php elseif (isset($paymentRequest['payment_links']) && !empty($paymentRequest['payment_links'])): ?>
+                                <!-- Multiple payment method links -->
+                                <h6>Choose Payment Method:</h6>
+                                <div class="row">
+                                    <?php foreach ($paymentRequest['payment_links'] as $method => $link): ?>
+                                        <div class="col-md-6 mb-2">
+                                            <a href="<?= esc($link) ?>" class="btn btn-outline-primary w-100">
+                                                <i class="fas fa-credit-card"></i> Pay with <?= ucfirst($method) ?>
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <!-- Fallback to gateway URL -->
+                                <div class="text-center">
+                                    <a href="<?= esc($paymentRequest['gateway_url']) ?>" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-credit-card"></i> Proceed to Payment Gateway
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php else: ?>
+                        <!-- Error handling -->
+                        <div class="alert alert-danger mt-4">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Error:</strong> Unable to initialize payment.
+                            <?= isset($paymentRequest['error']) ? esc($paymentRequest['error']) : 'Please try again.' ?>
+                        </div>
+
+                        <!-- Debug information in test mode -->
+                        <?php if (ENVIRONMENT === 'development' && isset($paymentRequest['raw_response'])): ?>
+                            <div class="alert alert-info mt-3">
+                                <strong>Debug Info:</strong>
+                                <pre><?= esc(json_encode($paymentRequest['raw_response'], JSON_PRETTY_PRINT)) ?></pre>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
 
                     <div class="mt-3">
-                        <button type="button" class="btn btn-primary" onclick="submitPayment()">
-                            <i class="fas fa-arrow-right"></i> Proceed to Payment
-                        </button>
-                        <a href="<?= base_url('orders/' . $order['order_number']) ?>" class="btn btn-secondary ms-2">
+                        <a href="<?= base_url('orders/' . $order['order_number']) ?>" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Back to Order
                         </a>
                     </div>
@@ -68,21 +107,36 @@
 </div>
 
 <script>
-function submitPayment() {
-    // Show loading state
-    document.querySelector('.btn-primary').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting...';
-    document.querySelector('.btn-primary').disabled = true;
-    
-    // Submit form after a short delay
-    setTimeout(function() {
-        document.getElementById('paymentForm').submit();
-    }, 1000);
-}
+// Add click tracking for payment buttons
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentButtons = document.querySelectorAll('a[href*="smartgateway"], a.btn-primary[href], a.btn-outline-primary[href]');
 
-// Auto-submit after 3 seconds
+    paymentButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Show loading state
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting to Payment...';
+            this.classList.add('disabled');
+
+            // Restore button if redirect fails
+            setTimeout(function() {
+                button.innerHTML = originalText;
+                button.classList.remove('disabled');
+            }, 10000);
+        });
+    });
+});
+
+// Auto-redirect if payment page URL is available
+<?php if (isset($paymentRequest['success']) && $paymentRequest['success'] &&
+          !empty($paymentRequest['payment_page_url'])): ?>
 setTimeout(function() {
-    submitPayment();
+    const paymentButton = document.querySelector('a.btn-primary[href]');
+    if (paymentButton) {
+        paymentButton.click();
+    }
 }, 3000);
+<?php endif; ?>
 </script>
 
 <?= $this->endSection() ?>

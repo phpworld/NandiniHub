@@ -197,20 +197,21 @@ class PaymentController extends BaseController
     }
 
     /**
-     * Handle payment gateway callback
+     * Handle payment gateway callback (return URL)
      */
     public function callback()
     {
-        $encResponse = $this->request->getPost('encResp');
+        // Get callback data from query parameters or POST data
+        $callbackData = array_merge($this->request->getGet(), $this->request->getPost());
 
-        if (!$encResponse) {
-            log_message('error', 'Payment callback received without encrypted response');
+        if (empty($callbackData)) {
+            log_message('error', 'Payment callback received without data');
             return redirect()->to('/payment/failure/invalid');
         }
 
         try {
             // Process the payment response
-            $response = $this->hdfcGateway->processPaymentResponse($encResponse);
+            $response = $this->hdfcGateway->processPaymentResponse($callbackData);
 
             if (!$response || !isset($response['transaction_id'])) {
                 log_message('error', 'Invalid payment response structure');
@@ -256,6 +257,73 @@ class PaymentController extends BaseController
         } catch (\Exception $e) {
             log_message('error', 'Payment callback processing failed: ' . $e->getMessage());
             return redirect()->to('/payment/failure/error');
+        }
+    }
+
+    /**
+     * Handle payment webhook notifications
+     */
+    public function webhook()
+    {
+        // Verify webhook signature
+        $payload = $this->request->getBody();
+        $signature = $this->request->getHeaderLine('X-Signature');
+
+        if (!$this->hdfcGateway->verifyWebhookSignature($payload, $signature)) {
+            log_message('error', 'Invalid webhook signature');
+            return $this->response->setStatusCode(401)->setJSON(['error' => 'Invalid signature']);
+        }
+
+        try {
+            $webhookData = json_decode($payload, true);
+
+            if (!$webhookData) {
+                log_message('error', 'Invalid webhook payload');
+                return $this->response->setStatusCode(400)->setJSON(['error' => 'Invalid payload']);
+            }
+
+            // Process webhook
+            $response = $this->hdfcGateway->processWebhook($webhookData);
+
+            if (!$response['success']) {
+                log_message('error', 'Webhook processing failed: ' . $response['error']);
+                return $this->response->setStatusCode(400)->setJSON(['error' => 'Processing failed']);
+            }
+
+            $transactionId = $response['order_id'];
+            $transaction = $this->paymentTransactionModel->getByTransactionId($transactionId);
+
+            if (!$transaction) {
+                log_message('error', 'Transaction not found for webhook: ' . $transactionId);
+                return $this->response->setStatusCode(404)->setJSON(['error' => 'Transaction not found']);
+            }
+
+            // Update transaction status based on webhook
+            $status = $this->hdfcGateway->getPaymentStatus($response['status']);
+
+            $updateData = [
+                'gateway_transaction_id' => $response['gateway_transaction_id'],
+                'gateway_status' => $response['status'],
+                'gateway_response' => $response['raw_data'],
+                'payment_method' => $response['payment_method'],
+                'bank_ref_no' => $response['bank_ref_no']
+            ];
+
+            $this->paymentTransactionModel->updateStatus($transactionId, $status, $updateData);
+
+            // Update order status if payment is successful
+            if ($status === 'success') {
+                $this->orderModel->update($transaction['order_id'], [
+                    'payment_status' => 'paid',
+                    'status' => 'processing'
+                ]);
+            }
+
+            return $this->response->setJSON(['status' => 'success']);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Webhook processing failed: ' . $e->getMessage());
+            return $this->response->setStatusCode(500)->setJSON(['error' => 'Internal server error']);
         }
     }
 

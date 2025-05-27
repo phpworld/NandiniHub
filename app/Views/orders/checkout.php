@@ -144,9 +144,9 @@
                             <div class="alert alert-info">
                                 <h6><i class="fas fa-info-circle me-2"></i>Online Payment Features:</h6>
                                 <ul class="mb-0">
-                                    <li><strong>Secure Gateway:</strong> HDFC Bank Payment Gateway</li>
-                                    <li><strong>Payment Options:</strong> Credit/Debit Cards, UPI, Net Banking, Wallets</li>
-                                    <li><strong>Security:</strong> 256-bit SSL encryption</li>
+                                    <li><strong>Secure Gateway:</strong> HDFC Bank SmartGateway</li>
+                                    <li><strong>Payment Options:</strong> Credit/Debit Cards, UPI, Net Banking, Wallets, EMI</li>
+                                    <li><strong>Security:</strong> JWT authentication & webhook verification</li>
                                     <li><strong>Instant Confirmation:</strong> Order confirmed immediately after payment</li>
                                 </ul>
                             </div>

@@ -46,6 +46,8 @@ $routes->group('payment', function ($routes) {
     $routes->post('initiate', 'PaymentController::initiate');
     $routes->get('process/(:segment)', 'PaymentController::process/$1');
     $routes->post('callback', 'PaymentController::callback');
+    $routes->get('callback', 'PaymentController::callback'); // GET callback for HDFC SmartGateway
+    $routes->post('webhook', 'PaymentController::webhook'); // Webhook for HDFC SmartGateway
     $routes->get('success/(:segment)', 'PaymentController::success/$1');
     $routes->get('failure/(:segment)', 'PaymentController::failure/$1');
     $routes->post('verify/(:segment)', 'PaymentController::verify/$1');
