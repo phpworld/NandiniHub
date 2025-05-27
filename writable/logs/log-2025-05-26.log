@@ -1,0 +1,198 @@
+CRITICAL - 2025-05-26 13:08:05 --> CodeIgniter\Exceptions\FrameworkException: Your zlib.output_compression ini directive is turned on. This will not work well with output buffers.
+[Method: GET, Route: /]
+in APPPATH/Config/Events.php on line 29.
+ 1 APPPATH/Config/Events.php(29): CodeIgniter\Exceptions\FrameworkException::forEnabledZlibOutputCompression()
+ 2 SYSTEMPATH/Events/Events.php(155): CodeIgniter\Events\Events::Config\{closure}()
+ 3 SYSTEMPATH/CodeIgniter.php(339): CodeIgniter\Events\Events::trigger('pre_system')
+ 4 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 13:12:02 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/index.php"
+[Method: GET, Route: admin/orders]
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 39.
+ 1 SYSTEMPATH/View/View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/index.php')
+ 2 SYSTEMPATH/Common.php(1173): CodeIgniter\View\View->render('admin/orders/index', [], true)
+ 3 APPPATH/Controllers/AdminController.php(901): view('admin/orders/index', [...])
+ 4 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\AdminController->orders()
+ 5 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 13:13:47 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/index.php"
+[Method: GET, Route: admin/orders]
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 39.
+ 1 SYSTEMPATH/View/View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/index.php')
+ 2 SYSTEMPATH/Common.php(1173): CodeIgniter\View\View->render('admin/orders/index', [], true)
+ 3 APPPATH/Controllers/AdminController.php(901): view('admin/orders/index', [...])
+ 4 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\AdminController->orders()
+ 5 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 13:13:54 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/index.php"
+[Method: GET, Route: admin/orders]
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 39.
+ 1 SYSTEMPATH/View/View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/index.php')
+ 2 SYSTEMPATH/Common.php(1173): CodeIgniter\View\View->render('admin/orders/index', [], true)
+ 3 APPPATH/Controllers/AdminController.php(901): view('admin/orders/index', [...])
+ 4 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\AdminController->orders()
+ 5 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 13:13:57 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/index.php"
+[Method: GET, Route: admin/orders]
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 39.
+ 1 SYSTEMPATH/View/View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/index.php')
+ 2 SYSTEMPATH/Common.php(1173): CodeIgniter\View\View->render('admin/orders/index', [], true)
+ 3 APPPATH/Controllers/AdminController.php(901): view('admin/orders/index', [...])
+ 4 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\AdminController->orders()
+ 5 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 13:49:23 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/index.php"
+[Method: GET, Route: admin/orders]
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 39.
+ 1 SYSTEMPATH/View/View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/index.php')
+ 2 SYSTEMPATH/Common.php(1173): CodeIgniter\View\View->render('admin/orders/index', [], true)
+ 3 APPPATH/Controllers/AdminController.php(901): view('admin/orders/index', [...])
+ 4 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\AdminController->orders()
+ 5 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 14:10:22 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/view.php"
+[Method: GET, Route: admin/orders/3]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/view.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/orders/view', [], true)
+ 3 APPPATH\Controllers\AdminController.php(921): view('admin/orders/view', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewOrder('3')
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 14:31:15 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/view.php"
+[Method: GET, Route: admin/orders/3]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/view.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/orders/view', [], true)
+ 3 APPPATH\Controllers\AdminController.php(921): view('admin/orders/view', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewOrder('3')
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 15:07:45 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/view.php"
+[Method: GET, Route: admin/orders/3]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/view.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/orders/view', [], true)
+ 3 APPPATH\Controllers\AdminController.php(921): view('admin/orders/view', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewOrder('3')
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 15:08:58 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/view.php"
+[Method: GET, Route: admin/orders/3]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/view.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/orders/view', [], true)
+ 3 APPPATH\Controllers\AdminController.php(921): view('admin/orders/view', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewOrder('3')
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 15:13:16 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/orders/view.php"
+[Method: GET, Route: admin/orders/3]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/orders/view.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/orders/view', [], true)
+ 3 APPPATH\Controllers\AdminController.php(921): view('admin/orders/view', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewOrder('3')
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 15:14:13 --> ErrorException: Undefined variable $sidebarItems
+[Method: GET, Route: admin/orders/3]
+in APPPATH\Views\admin\layout\sidebar.php on line 10.
+ 1 APPPATH\Views\admin\layout\sidebar.php(10): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $sidebarItems', 'E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\sidebar.php', 10)
+ 2 SYSTEMPATH\View\View.php(224): include('E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\sidebar.php')
+ 3 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('admin/layout/sidebar', null, true)
+ 5 APPPATH\Views\admin\layout\main.php(207): CodeIgniter\View\View->include('admin/layout/sidebar')
+ 6 SYSTEMPATH\View\View.php(224): include('E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\main.php')
+ 7 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 8 SYSTEMPATH\View\View.php(240): CodeIgniter\View\View->render('admin/layout/main', [], true)
+ 9 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/orders/view', [], true)
+10 APPPATH\Controllers\AdminController.php(921): view('admin/orders/view', [...])
+11 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewOrder('3')
+12 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+13 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+14 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+15 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+16 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 15:17:04 --> ErrorException: Undefined variable $sidebarItems
+[Method: GET, Route: admin/orders/3]
+in APPPATH\Views\admin\layout\sidebar.php on line 10.
+ 1 APPPATH\Views\admin\layout\sidebar.php(10): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $sidebarItems', 'E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\sidebar.php', 10)
+ 2 SYSTEMPATH\View\View.php(224): include('E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\sidebar.php')
+ 3 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('admin/layout/sidebar', null, true)
+ 5 APPPATH\Views\admin\layout\main.php(207): CodeIgniter\View\View->include('admin/layout/sidebar')
+ 6 SYSTEMPATH\View\View.php(224): include('E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\main.php')
+ 7 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 8 SYSTEMPATH\View\View.php(240): CodeIgniter\View\View->render('admin/layout/main', [], true)
+ 9 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/orders/view', [], true)
+10 APPPATH\Controllers\AdminController.php(923): view('admin/orders/view', [...])
+11 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewOrder('3')
+12 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+13 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+14 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+15 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+16 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 15:17:05 --> ErrorException: Undefined variable $sidebarItems
+[Method: GET, Route: admin/orders/3]
+in APPPATH\Views\admin\layout\sidebar.php on line 10.
+ 1 APPPATH\Views\admin\layout\sidebar.php(10): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $sidebarItems', 'E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\sidebar.php', 10)
+ 2 SYSTEMPATH\View\View.php(224): include('E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\sidebar.php')
+ 3 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('admin/layout/sidebar', null, true)
+ 5 APPPATH\Views\admin\layout\main.php(207): CodeIgniter\View\View->include('admin/layout/sidebar')
+ 6 SYSTEMPATH\View\View.php(224): include('E:\\xampp\\htdocs\\nandinihub\\app\\Views\\admin\\layout\\main.php')
+ 7 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 8 SYSTEMPATH\View\View.php(240): CodeIgniter\View\View->render('admin/layout/main', [], true)
+ 9 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/orders/view', [], true)
+10 APPPATH\Controllers\AdminController.php(923): view('admin/orders/view', [...])
+11 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewOrder('3')
+12 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+13 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+14 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+15 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+16 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-26 15:30:58 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "admin/users/view.php"
+[Method: GET, Route: admin/users/2]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('admin/users/view.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('admin/users/view', [], true)
+ 3 APPPATH\Controllers\AdminController.php(1034): view('admin/users/view', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AdminController->viewUser('2')
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AdminController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
