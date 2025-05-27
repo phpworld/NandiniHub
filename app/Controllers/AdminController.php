@@ -112,6 +112,16 @@ class AdminController extends BaseController
                 'key' => 'banners'
             ],
             [
+                'title' => 'Coupons',
+                'url' => base_url('admin/coupons'),
+                'icon' => 'fas fa-tags',
+                'key' => 'coupons',
+                'submenu' => [
+                    ['title' => 'All Coupons', 'url' => base_url('admin/coupons')],
+                    ['title' => 'Add Coupon', 'url' => base_url('admin/coupons/create')]
+                ]
+            ],
+            [
                 'title' => 'Settings',
                 'url' => base_url('admin/settings'),
                 'icon' => 'fas fa-cog',

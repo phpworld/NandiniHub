@@ -1,148 +1,132 @@
-
-ERROR - 2025-05-27 08:46:54 --> mysqli_sql_exception: Duplicate key name 'transaction_id' in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
-Stack trace:
-#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('CREATE TABLE `p...', 0)
-#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `p...')
-#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `p...')
-#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `p...')
-#4 I:\xampp\htdocs\nandinihub\app\Database\Migrations\2024-01-01-000009_CreatePaymentTransactionsTable.php(98): CodeIgniter\Database\Forge->createTable('payment_transac...')
-#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MigrationRunner.php(876): App\Database\Migrations\CreatePaymentTransactionsTable->up()
-#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MigrationRunner.php(182): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
-#7 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
-#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
-#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
-#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(360): CodeIgniter\CLI\Console->run()
-#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(104): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
-#12 I:\xampp\htdocs\nandinihub\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
-#13 {main}
-ERROR - 2025-05-27 08:53:50 --> Payment initiation failed: Undefined array key "transaction_id"
-ERROR - 2025-05-27 08:59:55 --> Payment initiation failed: Undefined array key "transaction_id"
-ERROR - 2025-05-27 09:00:55 --> Payment initiation failed: Undefined array key "transaction_id"
-ERROR - 2025-05-27 09:10:21 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
-Stack trace:
-#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
-#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
-#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
-#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
-#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
-#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
-#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
-#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(419): CodeIgniter\Model->insert(Array)
-#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
-#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
-#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
-#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
-#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-#13 I:\xampp\htdocs\nandinihub\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-#14 {main}
-ERROR - 2025-05-27 09:13:54 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
-Stack trace:
-#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
-#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
-#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
-#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
-#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
-#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
-#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
-#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(426): CodeIgniter\Model->insert(Array)
-#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
-#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
-#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
-#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
-#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-#13 I:\xampp\htdocs\nandinihub\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-#14 {main}
-ERROR - 2025-05-27 09:14:54 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
-Stack trace:
-#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
-#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
-#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
-#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
-#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
-#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
-#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
-#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(426): CodeIgniter\Model->insert(Array)
-#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
-#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
-#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
-#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
-#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-#13 I:\xampp\htdocs\nandinihub\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-#14 {main}
-ERROR - 2025-05-27 09:40:54 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-ERROR - 2025-05-27 09:40:55 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-CRITICAL - 2025-05-27 09:40:55 --> ErrorException: Undefined array key "gateway_url"
-[Method: GET, Route: payment/process/TXN20250527094053532]
-in APPPATH\Views\payment\process.php on line 51.
- 1 APPPATH\Views\payment\process.php(51): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "gateway_url"', 'I:\\xampp\\htdocs\\nandinihub\\app\\Views\\payment\\process.php', 51)
- 2 SYSTEMPATH\View\View.php(224): include('I:\\xampp\\htdocs\\nandinihub\\app\\Views\\payment\\process.php')
- 3 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
- 4 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('payment/process', [], true)
- 5 APPPATH\Controllers\PaymentController.php(196): view('payment/process', [...])
- 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\PaymentController->process('TXN20250527094053532')
- 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
- 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
-10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-ERROR - 2025-05-27 09:47:26 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
-Stack trace:
-#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
-#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
-#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
-#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
-#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
-#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
-#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
-#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(494): CodeIgniter\Model->insert(Array)
-#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
-#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
-#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
-#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
-#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-#13 I:\xampp\htdocs\nandinihub\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-#14 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\rewrite.php(44): require_once('I:\\xampp\\htdocs...')
-#15 {main}
-ERROR - 2025-05-27 10:00:44 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-ERROR - 2025-05-27 10:00:45 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-ERROR - 2025-05-27 10:05:26 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-ERROR - 2025-05-27 10:13:47 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-ERROR - 2025-05-27 10:13:51 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-ERROR - 2025-05-27 10:14:07 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-ERROR - 2025-05-27 10:14:07 --> HDFC Order creation failed: API Error: HTTP 404 - Unknown error
-ERROR - 2025-05-27 10:23:55 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
-Stack trace:
-#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
-#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
-#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
-#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
-#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
-#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
-#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
-#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(494): CodeIgniter\Model->insert(Array)
-#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
-#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
-#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
-#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
-#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-#13 I:\xampp\htdocs\nandinihub\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-#14 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\rewrite.php(44): require_once('I:\\xampp\\htdocs...')
-#15 {main}
-ERROR - 2025-05-27 10:25:01 --> mysqli_sql_exception: Cannot add or update a child row: a foreign key constraint fails (`nandini`.`payment_transactions`, CONSTRAINT `payment_transactions_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) in I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:327
-Stack trace:
-#0 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `pa...', 0)
-#1 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `pa...')
-#2 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `pa...')
-#3 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `pa...', Array, false)
-#4 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
-#5 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
-#6 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
-#7 I:\xampp\htdocs\nandinihub\app\Controllers\PaymentController.php(494): CodeIgniter\Model->insert(Array)
-#8 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(933): App\Controllers\PaymentController->test()
-#9 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PaymentController))
-#10 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
-#11 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
-#12 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-#13 I:\xampp\htdocs\nandinihub\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-#14 I:\xampp\htdocs\nandinihub\vendor\codeigniter4\framework\system\rewrite.php(44): require_once('I:\\xampp\\htdocs...')
-#15 {main}
+CRITICAL - 2025-05-27 11:31:44 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:31:49 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:31:50 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:31:51 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:31:51 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:31:51 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:31:51 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:31:51 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:31:51 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:32:35 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:32:35 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:12 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:13 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:13 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:13 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:14 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:19 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:19 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:19 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:34:19 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 83.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:35:58 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 90.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:38:09 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:38:10 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:38:10 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:38:10 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:38:10 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:38:11 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:38:26 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:38:27 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:40:44 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:40:45 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:40:45 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-05-27 11:40:45 --> ErrorException: Declaration of App\Controllers\CouponController::validate() must be compatible with CodeIgniter\Controller::validate($rules, array $messages = []): bool
+[Method: POST, Route: coupon/apply]
+in APPPATH\Controllers\CouponController.php on line 95.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()

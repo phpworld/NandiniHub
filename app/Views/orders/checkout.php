@@ -204,15 +204,45 @@
 
                         <hr>
 
+                        <!-- Coupon Section -->
+                        <div class="mb-3">
+                            <h6 class="mb-3">Have a Coupon Code?</h6>
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" id="coupon_code" placeholder="Enter coupon code" maxlength="50">
+                                <button type="button" class="btn btn-outline-primary" id="apply_coupon">Apply</button>
+                            </div>
+                            <div id="coupon_message" class="small"></div>
+
+                            <!-- Applied Coupon Display -->
+                            <div id="applied_coupon_display" class="alert alert-success mt-2" style="display: none;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-tag me-2"></i>
+                                        <span id="applied_coupon_text"></span>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" id="remove_coupon">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
                         <!-- Totals -->
                         <div class="d-flex justify-content-between mb-2">
                             <span>Subtotal:</span>
-                            <span>₹<?= number_format($cartTotal, 2) ?></span>
+                            <span id="subtotal_amount">₹<?= number_format($cartTotal, 2) ?></span>
+                        </div>
+
+                        <div id="discount_row" class="d-flex justify-content-between mb-2 text-success" style="display: none;">
+                            <span>Discount:</span>
+                            <span id="discount_amount">-₹0.00</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Shipping:</span>
-                            <span class="text-success">
+                            <span class="text-success" id="shipping_amount">
                                 <?php if ($cartTotal >= 500): ?>
                                     Free
                                 <?php else: ?>
@@ -223,14 +253,14 @@
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Tax (18% GST):</span>
-                            <span>₹<?= number_format($cartTotal * 0.18, 2) ?></span>
+                            <span id="tax_amount">₹<?= number_format($cartTotal * 0.18, 2) ?></span>
                         </div>
 
                         <hr>
 
                         <div class="d-flex justify-content-between mb-3">
                             <strong>Total:</strong>
-                            <strong class="text-primary">
+                            <strong class="text-primary" id="final_total">
                                 ₹<?= number_format($cartTotal + ($cartTotal >= 500 ? 0 : 50) + ($cartTotal * 0.18), 2) ?>
                             </strong>
                         </div>
@@ -278,6 +308,158 @@
 
 <?= $this->section('scripts') ?>
 <script>
+    // Coupon functionality
+    let originalSubtotal = <?= $cartTotal ?>;
+    let currentDiscount = 0;
+    let appliedCoupon = null;
+
+    // Check if coupon is already applied from session
+    <?php if (session()->get('applied_coupon')): ?>
+        appliedCoupon = <?= json_encode(session()->get('applied_coupon')) ?>;
+        if (appliedCoupon) {
+            showAppliedCoupon(appliedCoupon);
+            updateTotals(appliedCoupon.discount_amount);
+        }
+    <?php endif; ?>
+
+    // Apply coupon
+    document.getElementById('apply_coupon').addEventListener('click', function() {
+        const code = document.getElementById('coupon_code').value.trim();
+
+        if (!code) {
+            showCouponMessage('Please enter a coupon code', 'danger');
+            return;
+        }
+
+        const button = this;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Applying...';
+        button.disabled = true;
+
+        fetch('<?= base_url('coupon/apply') ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: 'code=' + encodeURIComponent(code)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                appliedCoupon = {
+                    code: code,
+                    discount_amount: data.discount_amount,
+                    coupon_data: data.coupon
+                };
+                showAppliedCoupon(appliedCoupon);
+                updateTotals(data.discount_amount);
+                showCouponMessage(data.message, 'success');
+                document.getElementById('coupon_code').value = '';
+            } else {
+                showCouponMessage(data.message, 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showCouponMessage('An error occurred. Please try again.', 'danger');
+        })
+        .finally(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
+    });
+
+    // Remove coupon
+    document.getElementById('remove_coupon').addEventListener('click', function() {
+        fetch('<?= base_url('coupon/remove') ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                hideAppliedCoupon();
+                updateTotals(0);
+                showCouponMessage(data.message, 'success');
+                appliedCoupon = null;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showCouponMessage('An error occurred. Please try again.', 'danger');
+        });
+    });
+
+    // Enter key support for coupon input
+    document.getElementById('coupon_code').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('apply_coupon').click();
+        }
+    });
+
+    function showAppliedCoupon(coupon) {
+        const display = document.getElementById('applied_coupon_display');
+        const text = document.getElementById('applied_coupon_text');
+
+        let couponText = `${coupon.code} - ₹${parseFloat(coupon.discount_amount).toFixed(2)} off`;
+        if (coupon.coupon_data && coupon.coupon_data.type === 'percentage') {
+            couponText = `${coupon.code} - ${coupon.coupon_data.value}% off (₹${parseFloat(coupon.discount_amount).toFixed(2)})`;
+        }
+
+        text.textContent = couponText;
+        display.style.display = 'block';
+    }
+
+    function hideAppliedCoupon() {
+        document.getElementById('applied_coupon_display').style.display = 'none';
+    }
+
+    function updateTotals(discountAmount) {
+        currentDiscount = parseFloat(discountAmount) || 0;
+        const subtotalAfterDiscount = originalSubtotal - currentDiscount;
+
+        // Update discount row
+        const discountRow = document.getElementById('discount_row');
+        const discountAmountSpan = document.getElementById('discount_amount');
+
+        if (currentDiscount > 0) {
+            discountRow.style.display = 'flex';
+            discountAmountSpan.textContent = `-₹${currentDiscount.toFixed(2)}`;
+        } else {
+            discountRow.style.display = 'none';
+        }
+
+        // Calculate shipping
+        const shipping = subtotalAfterDiscount >= 500 ? 0 : 50;
+        const shippingSpan = document.getElementById('shipping_amount');
+        shippingSpan.textContent = shipping === 0 ? 'Free' : `₹${shipping.toFixed(2)}`;
+
+        // Calculate tax on discounted amount
+        const tax = subtotalAfterDiscount * 0.18;
+        document.getElementById('tax_amount').textContent = `₹${tax.toFixed(2)}`;
+
+        // Calculate final total
+        const finalTotal = subtotalAfterDiscount + shipping + tax;
+        document.getElementById('final_total').textContent = `₹${finalTotal.toFixed(2)}`;
+    }
+
+    function showCouponMessage(message, type) {
+        const messageDiv = document.getElementById('coupon_message');
+        messageDiv.className = `small text-${type}`;
+        messageDiv.textContent = message;
+
+        // Clear message after 5 seconds
+        setTimeout(() => {
+            messageDiv.textContent = '';
+            messageDiv.className = 'small';
+        }, 5000);
+    }
+
     // Handle billing address toggle
     document.getElementById('same_as_shipping').addEventListener('change', function() {
         const billingSection = document.getElementById('billing_address_section');

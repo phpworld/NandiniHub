@@ -86,14 +86,15 @@ class OrderController extends BaseController
         }
 
         $userId = session()->get('user_id');
-        $cartItems = $this->cartModel->getCartItems($userId);
+        $sessionId = session()->session_id;
+        $cartItems = $this->cartModel->getCartItems($userId, $sessionId);
 
         if (empty($cartItems)) {
             session()->setFlashdata('error', 'Your cart is empty');
             return redirect()->to('/cart');
         }
 
-        $cartTotal = $this->cartModel->getCartTotal($userId);
+        $cartTotal = $this->cartModel->getCartTotal($userId, $sessionId);
         $user = $this->userModel->find($userId);
 
         $data = [
@@ -113,12 +114,13 @@ class OrderController extends BaseController
         }
 
         $userId = session()->get('user_id');
+        $sessionId = session()->session_id;
 
         // Debug: Log the incoming data
         log_message('info', 'Order processing attempt for user ID: ' . $userId);
         log_message('info', 'POST data: ' . json_encode($this->request->getPost()));
 
-        $cartItems = $this->cartModel->getCartItems($userId);
+        $cartItems = $this->cartModel->getCartItems($userId, $sessionId);
 
         if (empty($cartItems)) {
             session()->setFlashdata('error', 'Your cart is empty');
@@ -143,18 +145,40 @@ class OrderController extends BaseController
         }
 
         // Calculate totals
-        $subtotal = $this->cartModel->getCartTotal($userId);
+        $subtotal = $this->cartModel->getCartTotal($userId, $sessionId);
+
+        // Handle coupon discount
+        $appliedCoupon = session()->get('applied_coupon');
+        $discountAmount = 0;
+        $couponId = null;
+        $couponCode = null;
+
+        if ($appliedCoupon) {
+            $couponService = new \App\Libraries\CouponService();
+            $cartData = ['total' => $subtotal];
+            $couponResult = $couponService->applyCoupon($appliedCoupon['code'], $cartData, $userId);
+
+            if ($couponResult['success']) {
+                $discountAmount = $couponResult['discount_amount'];
+                $couponId = $appliedCoupon['coupon_id'];
+                $couponCode = $appliedCoupon['code'];
+            }
+        }
+
         $shipping = $subtotal >= 500 ? 0 : 50;
-        $tax = $subtotal * 0.18;
-        $total = $subtotal + $shipping + $tax;
+        $tax = ($subtotal - $discountAmount) * 0.18;
+        $total = $subtotal - $discountAmount + $shipping + $tax;
 
         // Create order data
         $orderData = [
             'user_id' => $userId,
             'total_amount' => $total,
+            'subtotal_amount' => $subtotal,
             'shipping_amount' => $shipping,
             'tax_amount' => $tax,
-            'discount_amount' => 0,
+            'discount_amount' => $discountAmount,
+            'coupon_id' => $couponId,
+            'coupon_code' => $couponCode,
             'payment_method' => $this->request->getPost('payment_method'),
             'payment_status' => 'pending',
             'shipping_address' => trim($this->request->getPost('shipping_address')),
@@ -230,6 +254,20 @@ class OrderController extends BaseController
             }
 
             log_message('info', 'Order completed successfully: ' . $order['order_number']);
+
+            // Process coupon usage if coupon was applied
+            if ($couponId && $discountAmount > 0) {
+                $couponService = new \App\Libraries\CouponService();
+                $couponUsageSuccess = $couponService->processCouponUsage($couponId, $userId, $orderId, $discountAmount, $subtotal);
+
+                if ($couponUsageSuccess) {
+                    log_message('info', 'Coupon usage recorded successfully for order: ' . $order['order_number']);
+                    // Remove applied coupon from session
+                    session()->remove('applied_coupon');
+                } else {
+                    log_message('error', 'Failed to record coupon usage for order: ' . $order['order_number']);
+                }
+            }
 
             // Handle different payment methods
             if ($order['payment_method'] === 'online') {

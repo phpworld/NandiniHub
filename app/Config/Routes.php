@@ -54,6 +54,198 @@ $routes->group('payment', function ($routes) {
     $routes->get('test', 'PaymentController::test'); // Debug route
 });
 
+// Coupon routes
+$routes->group('coupon', function ($routes) {
+    $routes->post('apply', 'CouponController::apply');
+    $routes->post('remove', 'CouponController::remove');
+    $routes->post('validate', 'CouponController::validateCoupon');
+    $routes->get('available', 'CouponController::getAvailable');
+    $routes->get('check/(:segment)', 'CouponController::check/$1');
+});
+
+// Test routes
+$routes->get('test/coupons', function() {
+    return view('test/coupon_test');
+});
+
+$routes->get('test/coupon-debug', function() {
+    $couponModel = new \App\Models\CouponModel();
+    $coupons = $couponModel->findAll();
+
+    $output = '<h2>Coupon Debug Information</h2>';
+    $output .= '<h3>Database Coupons:</h3>';
+    $output .= '<pre>' . print_r($coupons, true) . '</pre>';
+
+    $output .= '<h3>Test Coupon Validation:</h3>';
+    if (!empty($coupons)) {
+        $testCoupon = $coupons[0];
+        $validation = $couponModel->validateCoupon($testCoupon['code'], 250.00, 1);
+        $output .= '<pre>' . print_r($validation, true) . '</pre>';
+
+        if ($validation['valid']) {
+            $discount = $couponModel->calculateDiscount($validation['coupon'], 250.00);
+            $output .= '<h3>Calculated Discount:</h3>';
+            $output .= '<pre>Discount Amount: ₹' . $discount . '</pre>';
+        }
+    }
+
+    return $output;
+});
+
+$routes->get('test/coupon-apply/(:segment)', function($code) {
+    $couponService = new \App\Libraries\CouponService();
+    $cartData = [
+        'items' => [
+            [
+                'id' => 1,
+                'name' => 'Test Product',
+                'price' => 250.00,
+                'quantity' => 1
+            ]
+        ]
+    ];
+
+    $result = $couponService->applyCoupon($code, $cartData, 1);
+
+    $output = '<h2>Coupon Apply Test: ' . $code . '</h2>';
+    $output .= '<pre>' . print_r($result, true) . '</pre>';
+
+    return $output;
+});
+
+$routes->get('test/cart-data', function() {
+    $userId = session()->get('user_id');
+    $sessionId = session()->session_id;
+    $cartModel = new \App\Models\CartModel();
+
+    $cartItems = $cartModel->getCartItems($userId, $sessionId);
+    $cartTotal = $cartModel->getCartTotal($userId, $sessionId);
+
+    $output = '<h2>Cart Data Debug</h2>';
+    $output .= '<h3>User ID:</h3><pre>' . ($userId ?? 'Not logged in') . '</pre>';
+    $output .= '<h3>Session ID:</h3><pre>' . $sessionId . '</pre>';
+    $output .= '<h3>Cart Items:</h3><pre>' . print_r($cartItems, true) . '</pre>';
+    $output .= '<h3>Cart Total:</h3><pre>₹' . number_format($cartTotal, 2) . '</pre>';
+
+    // Test coupon controller cart data
+    $couponController = new \App\Controllers\CouponController();
+    $reflection = new ReflectionClass($couponController);
+    $method = $reflection->getMethod('getCartData');
+    $method->setAccessible(true);
+    $cartData = $method->invoke($couponController);
+
+    $output .= '<h3>Coupon Controller Cart Data:</h3><pre>' . print_r($cartData, true) . '</pre>';
+
+    return $output;
+});
+
+$routes->get('test/add-to-cart', function() {
+    $sessionId = session()->session_id;
+    $cartModel = new \App\Models\CartModel();
+    $productModel = new \App\Models\ProductModel();
+
+    // Get first product
+    $product = $productModel->first();
+
+    if ($product) {
+        $cartData = [
+            'product_id' => $product['id'],
+            'quantity' => 2,
+            'price' => $product['price'],
+            'session_id' => $sessionId
+        ];
+
+        $result = $cartModel->addToCart($cartData);
+
+        $output = '<h2>Add to Cart Test</h2>';
+        $output .= '<h3>Product Added:</h3><pre>' . print_r($product, true) . '</pre>';
+        $output .= '<h3>Cart Data:</h3><pre>' . print_r($cartData, true) . '</pre>';
+        $output .= '<h3>Result:</h3><pre>' . ($result ? 'Success' : 'Failed') . '</pre>';
+
+        // Check cart after adding
+        $cartItems = $cartModel->getCartItems(null, $sessionId);
+        $cartTotal = $cartModel->getCartTotal(null, $sessionId);
+
+        $output .= '<h3>Cart Items After Adding:</h3><pre>' . print_r($cartItems, true) . '</pre>';
+        $output .= '<h3>Cart Total:</h3><pre>₹' . number_format($cartTotal, 2) . '</pre>';
+
+        $output .= '<p><a href="' . base_url('test/cart-data') . '">Check Cart Data</a></p>';
+        $output .= '<p><a href="' . base_url('test/coupon-api-test') . '">Test Coupon API</a></p>';
+        $output .= '<p><a href="' . base_url('checkout') . '">Go to Checkout</a></p>';
+
+        return $output;
+    } else {
+        return '<h2>No products found in database</h2>';
+    }
+});
+
+$routes->get('test/coupon-api-test', function() {
+    $output = '<h2>Coupon API Test</h2>';
+    $output .= '<div id="test-results"></div>';
+    $output .= '<script>
+        // Test coupon API directly
+        fetch("' . base_url('coupon/apply') . '", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: "code=WELCOME10"
+        })
+        .then(response => {
+            console.log("Response status:", response.status);
+            return response.text();
+        })
+        .then(text => {
+            console.log("Response text:", text);
+            document.getElementById("test-results").innerHTML = "<h3>API Response:</h3><pre>" + text + "</pre>";
+
+            // Try to parse as JSON
+            try {
+                const data = JSON.parse(text);
+                document.getElementById("test-results").innerHTML += "<h3>Parsed JSON:</h3><pre>" + JSON.stringify(data, null, 2) + "</pre>";
+            } catch (e) {
+                document.getElementById("test-results").innerHTML += "<h3>JSON Parse Error:</h3><pre>" + e.message + "</pre>";
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("test-results").innerHTML = "<h3>Error:</h3><pre>" + error.message + "</pre>";
+        });
+    </script>';
+
+    return $output;
+});
+
+$routes->get('test/coupon-direct', function() {
+    // Create a mock request
+    $request = \Config\Services::request();
+    $request->setMethod('post');
+
+    // Create coupon controller
+    $couponController = new \App\Controllers\CouponController();
+
+    // Manually set POST data
+    $_POST['code'] = 'WELCOME10';
+
+    try {
+        $response = $couponController->apply();
+
+        $output = '<h2>Direct Coupon Controller Test</h2>';
+        $output .= '<h3>Response Type:</h3><pre>' . get_class($response) . '</pre>';
+
+        if (method_exists($response, 'getBody')) {
+            $output .= '<h3>Response Body:</h3><pre>' . $response->getBody() . '</pre>';
+        } else {
+            $output .= '<h3>Response:</h3><pre>' . print_r($response, true) . '</pre>';
+        }
+
+        return $output;
+    } catch (Exception $e) {
+        return '<h2>Error:</h2><pre>' . $e->getMessage() . '</pre>';
+    }
+});
+
 // Review routes
 $routes->get('/product/(:segment)/review', 'ReviewController::create/$1');
 $routes->post('/reviews', 'ReviewController::store');
@@ -114,6 +306,16 @@ $routes->group('admin', function ($routes) {
     $routes->post('banners/(:num)', 'AdminController::updateBanner/$1');
     $routes->delete('banners/(:num)', 'AdminController::deleteBanner/$1');
     $routes->post('banners/(:num)/toggle-status', 'AdminController::toggleBannerStatus/$1');
+
+    // Coupon management
+    $routes->get('coupons', 'Admin\CouponController::index');
+    $routes->get('coupons/create', 'Admin\CouponController::create');
+    $routes->post('coupons/store', 'Admin\CouponController::store');
+    $routes->get('coupons/(:num)/edit', 'Admin\CouponController::edit/$1');
+    $routes->post('coupons/(:num)/update', 'Admin\CouponController::update/$1');
+    $routes->post('coupons/(:num)/delete', 'Admin\CouponController::delete/$1');
+    $routes->post('coupons/(:num)/toggle', 'Admin\CouponController::toggle/$1');
+    $routes->get('coupons/(:num)/stats', 'Admin\CouponController::stats/$1');
 
     // Settings
     $routes->get('settings', 'AdminController::settings');
