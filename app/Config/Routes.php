@@ -93,6 +93,15 @@ $routes->group('admin', function ($routes) {
     $routes->post('reviews/(:num)/approve', 'AdminController::approveReview/$1');
     $routes->post('reviews/(:num)/reject', 'AdminController::rejectReview/$1');
 
+    // Banner management
+    $routes->get('banners', 'AdminController::banners');
+    $routes->get('banners/create', 'AdminController::createBanner');
+    $routes->post('banners', 'AdminController::storeBanner');
+    $routes->get('banners/(:num)/edit', 'AdminController::editBanner/$1');
+    $routes->post('banners/(:num)', 'AdminController::updateBanner/$1');
+    $routes->delete('banners/(:num)', 'AdminController::deleteBanner/$1');
+    $routes->post('banners/(:num)/toggle-status', 'AdminController::toggleBannerStatus/$1');
+
     // Settings
     $routes->get('settings', 'AdminController::settings');
     $routes->post('settings', 'AdminController::updateSettings');

@@ -2,23 +2,123 @@
 
 <?= $this->section('content') ?>
 
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Premium Puja Samagri Online</h1>
-                <p class="lead mb-4">Discover authentic and high-quality puja items including agarbatti, dhoop, diyas, and all essential spiritual accessories for your divine worship.</p>
-                <div class="d-flex gap-3">
-                    <a href="<?= base_url('products') ?>" class="btn btn-light btn-lg">Shop Now</a>
-                    <a href="<?= base_url('category/agarbatti-incense') ?>" class="btn btn-outline-light btn-lg">View Agarbatti</a>
+<!-- Hero Slider Section -->
+<section class="hero-slider-section">
+    <?php if (!empty($banners)): ?>
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators">
+                <?php foreach ($banners as $index => $banner): ?>
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="<?= $index ?>"
+                            class="<?= $index === 0 ? 'active' : '' ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>"
+                            aria-label="Slide <?= $index + 1 ?>"></button>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Carousel Items -->
+            <div class="carousel-inner">
+                <?php foreach ($banners as $index => $banner): ?>
+                    <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                        <!-- Background Image -->
+                        <div class="hero-slide" style="background-image: url('<?= $banner['image'] ? base_url('uploads/banners/' . esc($banner['image'])) : 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80' ?>');">
+                            <!-- Overlay -->
+                            <div class="hero-overlay"></div>
+
+                            <!-- Content -->
+                            <div class="hero-content">
+                                <div class="container">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-8 text-center">
+                                            <h1 class="hero-title display-3 fw-bold mb-4" data-aos="fade-up">
+                                                <?= $banner['title'] ? esc($banner['title']) : 'Premium Puja Samagri Online' ?>
+                                            </h1>
+                                            <p class="hero-subtitle lead mb-5" data-aos="fade-up" data-aos-delay="200">
+                                                <?= $banner['subtitle'] ? esc($banner['subtitle']) : 'Discover authentic and high-quality puja items including agarbatti, dhoop, diyas, and all essential spiritual accessories for your divine worship.' ?>
+                                            </p>
+                                            <?php if ($banner['description']): ?>
+                                                <p class="hero-description mb-5" data-aos="fade-up" data-aos-delay="300">
+                                                    <?= esc($banner['description']) ?>
+                                                </p>
+                                            <?php endif; ?>
+
+                                            <div class="hero-buttons d-flex flex-column flex-sm-row gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="400">
+                                                <?php if ($banner['button_text'] && $banner['button_link']): ?>
+                                                    <?php
+                                                    // Convert relative URLs to absolute URLs
+                                                    $buttonUrl = $banner['button_link'];
+                                                    if (strpos($buttonUrl, 'http') !== 0) {
+                                                        $buttonUrl = base_url(ltrim($buttonUrl, '/'));
+                                                    }
+                                                    ?>
+                                                    <a href="<?= esc($buttonUrl) ?>" class="btn btn-primary btn-lg px-5 py-3">
+                                                        <i class="fas fa-shopping-bag me-2"></i><?= esc($banner['button_text']) ?>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <a href="<?= base_url('products') ?>" class="btn btn-primary btn-lg px-5 py-3">
+                                                        <i class="fas fa-shopping-bag me-2"></i>Shop Now
+                                                    </a>
+                                                <?php endif; ?>
+
+                                                <?php if ($banner['button_text_2'] && $banner['button_link_2']): ?>
+                                                    <?php
+                                                    // Convert relative URLs to absolute URLs
+                                                    $buttonUrl2 = $banner['button_link_2'];
+                                                    if (strpos($buttonUrl2, 'http') !== 0) {
+                                                        $buttonUrl2 = base_url(ltrim($buttonUrl2, '/'));
+                                                    }
+                                                    ?>
+                                                    <a href="<?= esc($buttonUrl2) ?>" class="btn btn-outline-light btn-lg px-5 py-3">
+                                                        <i class="fas fa-eye me-2"></i><?= esc($banner['button_text_2']) ?>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <a href="<?= base_url('category/agarbatti-incense') ?>" class="btn btn-outline-light btn-lg px-5 py-3">
+                                                        <i class="fas fa-eye me-2"></i>View Agarbatti
+                                                    </a>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    <?php else: ?>
+        <!-- Default Banner if no banners exist -->
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1582735689369-4fe89db7114c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 text-center">
+                            <h1 class="hero-title display-3 fw-bold mb-4">Premium Puja Samagri Online</h1>
+                            <p class="hero-subtitle lead mb-5">Discover authentic and high-quality puja items including agarbatti, dhoop, diyas, and all essential spiritual accessories for your divine worship.</p>
+                            <div class="hero-buttons d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                                <a href="<?= base_url('products') ?>" class="btn btn-primary btn-lg px-5 py-3">
+                                    <i class="fas fa-shopping-bag me-2"></i>Shop Now
+                                </a>
+                                <a href="<?= base_url('category/agarbatti-incense') ?>" class="btn btn-outline-light btn-lg px-5 py-3">
+                                    <i class="fas fa-eye me-2"></i>View Agarbatti
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-6 text-center">
-                <img src="https://via.placeholder.com/500x400/ff6b35/ffffff?text=Puja+Samagri" alt="Puja Samagri" class="img-fluid rounded">
-            </div>
         </div>
-    </div>
+    <?php endif; ?>
 </section>
 
 <!-- Categories Section -->
@@ -32,27 +132,35 @@
         <div class="row g-4">
             <?php foreach ($categories as $category): ?>
                 <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="card category-card h-100 text-center">
-                        <div class="card-body p-4">
-                            <div class="mb-3">
-                                <?php
-                                $icons = [
-                                    'agarbatti-incense' => 'fas fa-fire',
-                                    'dhoop-sambrani' => 'fas fa-smoke',
-                                    'puja-thali-accessories' => 'fas fa-circle',
-                                    'diyas-candles' => 'fas fa-candle-holder',
-                                    'flowers-garlands' => 'fas fa-seedling',
-                                    'puja-oils-ghee' => 'fas fa-oil-can',
-                                    'idols-statues' => 'fas fa-praying-hands',
-                                    'puja-books-mantras' => 'fas fa-book'
-                                ];
-                                $icon = $icons[$category['slug']] ?? 'fas fa-star';
-                                ?>
-                                <i class="<?= $icon ?> fa-3x text-primary"></i>
-                            </div>
+                    <div class="card category-card h-100">
+                        <div class="position-relative">
+                            <?php if (!empty($category['image'])): ?>
+                                <img src="<?= base_url('uploads/categories/' . esc($category['image'])) ?>"
+                                     alt="<?= esc($category['name']) ?>"
+                                     class="card-img-top category-image">
+                            <?php else: ?>
+                                <div class="card-img-top category-image-placeholder d-flex align-items-center justify-content-center">
+                                    <?php
+                                    $icons = [
+                                        'agarbatti-incense' => 'fas fa-fire',
+                                        'dhoop-sambrani' => 'fas fa-smoke',
+                                        'puja-thali-accessories' => 'fas fa-circle',
+                                        'diyas-candles' => 'fas fa-candle-holder',
+                                        'flowers-garlands' => 'fas fa-seedling',
+                                        'puja-oils-ghee' => 'fas fa-oil-can',
+                                        'idols-statues' => 'fas fa-praying-hands',
+                                        'puja-books-mantras' => 'fas fa-book'
+                                    ];
+                                    $icon = $icons[$category['slug']] ?? 'fas fa-star';
+                                    ?>
+                                    <i class="<?= $icon ?> fa-4x text-primary"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="card-body d-flex flex-column text-center">
                             <h5 class="card-title"><?= esc($category['name']) ?></h5>
-                            <p class="card-text text-muted"><?= esc($category['description']) ?></p>
-                            <a href="<?= base_url('category/' . esc($category['slug'])) ?>" class="btn btn-primary">Explore</a>
+                            <p class="card-text text-muted flex-grow-1"><?= esc($category['description']) ?></p>
+                            <a href="<?= base_url('category/' . esc($category['slug'])) ?>" class="btn btn-primary mt-auto">Explore</a>
                         </div>
                     </div>
                 </div>
@@ -74,7 +182,7 @@
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="card product-card h-100">
                         <div class="position-relative">
-                            <img src="<?= $product['image'] ? esc($product['image']) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
+                            <img src="<?= $product['image'] ? base_url('uploads/products/' . esc($product['image'])) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
                                  class="card-img-top product-image" alt="<?= esc($product['name']) ?>">
 
                             <?php if (!empty($product['sale_price']) && $product['sale_price'] < $product['price']): ?>
@@ -141,7 +249,7 @@
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="card product-card h-100">
                         <div class="position-relative">
-                            <img src="<?= $product['image'] ? esc($product['image']) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
+                            <img src="<?= $product['image'] ? base_url('uploads/products/' . esc($product['image'])) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
                                  class="card-img-top product-image" alt="<?= esc($product['name']) ?>">
 
                             <span class="position-absolute top-0 start-0 badge bg-success m-2">New</span>

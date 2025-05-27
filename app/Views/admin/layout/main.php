@@ -316,6 +316,39 @@
                 $('.alert').fadeOut('slow');
             }, 5000);
         });
+
+        // Global function to show alerts
+        function showAlert(type, message) {
+            const alertTypes = {
+                'success': 'alert-success',
+                'error': 'alert-danger',
+                'warning': 'alert-warning',
+                'info': 'alert-info'
+            };
+
+            const alertClass = alertTypes[type] || 'alert-info';
+            const iconClass = type === 'success' ? 'fa-check-circle' :
+                             type === 'error' ? 'fa-exclamation-circle' :
+                             type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+
+            const alertHtml = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                    <i class="fas ${iconClass} me-2"></i>${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+
+            // Remove existing alerts
+            $('.content-wrapper .alert').remove();
+
+            // Add new alert at the top of content wrapper
+            $('.content-wrapper').prepend(alertHtml);
+
+            // Auto-hide after 5 seconds
+            setTimeout(function() {
+                $('.content-wrapper .alert').fadeOut('slow');
+            }, 5000);
+        }
     </script>
 
     <?= $this->renderSection('scripts') ?>

@@ -22,6 +22,71 @@
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-3 mb-4">
+            <!-- Filters -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Filters</h5>
+                </div>
+                <div class="card-body">
+                    <form id="filterForm" method="GET" action="<?= base_url('products') ?>">
+                        <!-- Price Range Filter -->
+                        <div class="mb-4">
+                            <h6>Price Range</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" name="min_price" class="form-control form-control-sm"
+                                           placeholder="Min ₹" value="<?= esc($currentFilters['min_price'] ?? '') ?>"
+                                           min="<?= $priceRange['min'] ?>" max="<?= $priceRange['max'] ?>">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" name="max_price" class="form-control form-control-sm"
+                                           placeholder="Max ₹" value="<?= esc($currentFilters['max_price'] ?? '') ?>"
+                                           min="<?= $priceRange['min'] ?>" max="<?= $priceRange['max'] ?>">
+                                </div>
+                            </div>
+                            <small class="text-muted">Range: ₹<?= $priceRange['min'] ?> - ₹<?= $priceRange['max'] ?></small>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="mb-4">
+                            <h6>Category</h6>
+                            <select name="category" class="form-select form-select-sm">
+                                <option value="">All Categories</option>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?= $category['id'] ?>"
+                                            <?= ($currentFilters['category_id'] ?? '') == $category['id'] ? 'selected' : '' ?>>
+                                        <?= esc($category['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Sort Filter -->
+                        <div class="mb-4">
+                            <h6>Sort By</h6>
+                            <select name="sort" class="form-select form-select-sm">
+                                <option value="newest" <?= ($currentFilters['sort'] ?? '') == 'newest' ? 'selected' : '' ?>>Newest First</option>
+                                <option value="price_low" <?= ($currentFilters['sort'] ?? '') == 'price_low' ? 'selected' : '' ?>>Price: Low to High</option>
+                                <option value="price_high" <?= ($currentFilters['sort'] ?? '') == 'price_high' ? 'selected' : '' ?>>Price: High to Low</option>
+                                <option value="name" <?= ($currentFilters['sort'] ?? '') == 'name' ? 'selected' : '' ?>>Name A-Z</option>
+                                <option value="featured" <?= ($currentFilters['sort'] ?? '') == 'featured' ? 'selected' : '' ?>>Featured</option>
+                            </select>
+                        </div>
+
+                        <!-- Hidden search field to preserve search query -->
+                        <?php if (!empty($currentFilters['search'])): ?>
+                            <input type="hidden" name="q" value="<?= esc($currentFilters['search']) ?>">
+                        <?php endif; ?>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm">Apply Filters</button>
+                            <a href="<?= base_url('products') ?>" class="btn btn-outline-secondary btn-sm">Clear All</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Categories -->
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">Categories</h5>
@@ -30,7 +95,27 @@
                     <ul class="list-unstyled">
                         <?php foreach ($categories as $category): ?>
                             <li class="mb-2">
-                                <a href="<?= base_url('category/' . esc($category['slug'])) ?>" class="text-decoration-none">
+                                <a href="<?= base_url('category/' . esc($category['slug'])) ?>" class="text-decoration-none d-flex align-items-center">
+                                    <?php if (!empty($category['image'])): ?>
+                                        <img src="<?= base_url('uploads/categories/' . esc($category['image'])) ?>"
+                                             alt="<?= esc($category['name']) ?>"
+                                             class="rounded me-2" style="width: 24px; height: 24px; object-fit: cover;">
+                                    <?php else: ?>
+                                        <?php
+                                        $icons = [
+                                            'agarbatti-incense' => 'fas fa-fire',
+                                            'dhoop-sambrani' => 'fas fa-smoke',
+                                            'puja-thali-accessories' => 'fas fa-circle',
+                                            'diyas-candles' => 'fas fa-candle-holder',
+                                            'flowers-garlands' => 'fas fa-seedling',
+                                            'puja-oils-ghee' => 'fas fa-oil-can',
+                                            'idols-statues' => 'fas fa-praying-hands',
+                                            'puja-books-mantras' => 'fas fa-book'
+                                        ];
+                                        $icon = $icons[$category['slug']] ?? 'fas fa-star';
+                                        ?>
+                                        <i class="<?= $icon ?> me-2"></i>
+                                    <?php endif; ?>
                                     <?= esc($category['name']) ?>
                                 </a>
                             </li>
@@ -42,6 +127,41 @@
 
         <!-- Products Grid -->
         <div class="col-lg-9">
+            <!-- Results Info and Active Filters -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-0"><?= count($products) ?> Products Found</h5>
+                </div>
+
+                <!-- Active Filters -->
+                <?php if (!empty($currentFilters)): ?>
+                    <div class="d-flex flex-wrap gap-2">
+                        <?php foreach ($currentFilters as $key => $value): ?>
+                            <?php if ($key === 'search'): ?>
+                                <span class="badge bg-primary">Search: "<?= esc($value) ?>"</span>
+                            <?php elseif ($key === 'category_id'): ?>
+                                <?php
+                                $categoryName = '';
+                                foreach ($categories as $cat) {
+                                    if ($cat['id'] == $value) {
+                                        $categoryName = $cat['name'];
+                                        break;
+                                    }
+                                }
+                                ?>
+                                <span class="badge bg-info">Category: <?= esc($categoryName) ?></span>
+                            <?php elseif ($key === 'min_price'): ?>
+                                <span class="badge bg-success">Min: ₹<?= esc($value) ?></span>
+                            <?php elseif ($key === 'max_price'): ?>
+                                <span class="badge bg-success">Max: ₹<?= esc($value) ?></span>
+                            <?php elseif ($key === 'sort'): ?>
+                                <span class="badge bg-warning">Sort: <?= esc(ucfirst(str_replace('_', ' ', $value))) ?></span>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
             <?php if (empty($products)): ?>
                 <div class="text-center py-5">
                     <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
@@ -55,7 +175,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="card product-card h-100">
                                 <div class="position-relative">
-                                    <img src="<?= $product['image'] ? esc($product['image']) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
+                                    <img src="<?= $product['image'] ? base_url('uploads/products/' . esc($product['image'])) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
                                          class="card-img-top product-image" alt="<?= esc($product['name']) ?>">
 
                                     <?php if (!empty($product['sale_price']) && $product['sale_price'] < $product['price']): ?>

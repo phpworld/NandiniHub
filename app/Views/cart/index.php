@@ -54,7 +54,7 @@
                                         <tr id="cart-item-<?= $item['id'] ?>">
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <img src="<?= $item['image'] ? esc($item['image']) : 'https://via.placeholder.com/80x60/f8f9fa/6c757d?text=' . urlencode($item['name']) ?>"
+                                                    <img src="<?= $item['image'] ? base_url('uploads/products/' . esc($item['image'])) : 'https://via.placeholder.com/80x60/f8f9fa/6c757d?text=' . urlencode($item['name']) ?>"
                                                          class="rounded me-3" style="width: 80px; height: 60px; object-fit: cover;" alt="<?= esc($item['name']) ?>">
                                                     <div>
                                                         <h6 class="mb-1"><?= esc($item['name']) ?></h6>

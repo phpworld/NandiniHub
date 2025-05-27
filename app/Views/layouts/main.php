@@ -11,6 +11,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS (Animate On Scroll) CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- Custom CSS -->
     <style>
         :root {
@@ -79,20 +81,222 @@
             color: white;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        /* Hero Slider Styles */
+        .hero-slider-section {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .hero-slide {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4));
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
             color: white;
-            padding: 80px 0;
+            text-align: center;
+            width: 100%;
+            padding: 2rem 0;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            opacity: 0.9;
+        }
+
+        .hero-buttons .btn {
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-buttons .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+        }
+
+        .hero-buttons .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-buttons .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+
+        /* Carousel Controls */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 5%;
+            opacity: 0.8;
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            opacity: 1;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            width: 2rem;
+            height: 2rem;
+            background-size: 100%, 100%;
+        }
+
+        /* Carousel Indicators */
+        .carousel-indicators {
+            bottom: 2rem;
+        }
+
+        .carousel-indicators [data-bs-target] {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .carousel-indicators .active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-slide {
+                height: 500px;
+            }
+
+            .hero-slider-section {
+                height: 500px;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-slide {
+                height: 450px;
+            }
+
+            .hero-slider-section {
+                height: 450px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-buttons .btn {
+                padding: 0.75rem 2rem !important;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-slide {
+                height: 400px;
+            }
+
+            .hero-slider-section {
+                height: 400px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column !important;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
         }
 
         .category-card {
             transition: all 0.3s ease;
             border-radius: 15px;
             overflow: hidden;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .category-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .category-image-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid #dee2e6;
         }
     </style>
 </head>
@@ -122,7 +326,45 @@
                             Categories
                         </a>
                         <ul class="dropdown-menu" id="categoriesMenu">
-                            <!-- Categories will be loaded here -->
+                            <?php
+                            // Load categories for navbar
+                            $categoryModel = new \App\Models\CategoryModel();
+                            $navbarCategories = $categoryModel->getActiveCategories();
+                            ?>
+                            <?php foreach ($navbarCategories as $category): ?>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="<?= base_url('category/' . esc($category['slug'])) ?>">
+                                        <?php if (!empty($category['image'])): ?>
+                                            <img src="<?= base_url('uploads/categories/' . esc($category['image'])) ?>"
+                                                 alt="<?= esc($category['name']) ?>"
+                                                 class="rounded me-2" style="width: 20px; height: 20px; object-fit: cover;">
+                                        <?php else: ?>
+                                            <?php
+                                            $icons = [
+                                                'agarbatti-incense' => 'fas fa-fire',
+                                                'dhoop-sambrani' => 'fas fa-smoke',
+                                                'puja-thali-accessories' => 'fas fa-circle',
+                                                'diyas-candles' => 'fas fa-candle-holder',
+                                                'flowers-garlands' => 'fas fa-seedling',
+                                                'puja-oils-ghee' => 'fas fa-oil-can',
+                                                'idols-statues' => 'fas fa-praying-hands',
+                                                'puja-books-mantras' => 'fas fa-book'
+                                            ];
+                                            $icon = $icons[$category['slug']] ?? 'fas fa-star';
+                                            ?>
+                                            <i class="<?= $icon ?> me-2 text-primary" style="width: 20px;"></i>
+                                        <?php endif; ?>
+                                        <?= esc($category['name']) ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="<?= base_url('products') ?>">
+                                    <i class="fas fa-th-large me-2 text-primary" style="width: 20px;"></i>
+                                    View All Products
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -254,6 +496,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- AOS (Animate On Scroll) JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
         // CSRF Token for AJAX requests
@@ -269,6 +513,14 @@
         $(document).ready(function() {
             loadCartCount();
             loadCategories();
+
+            // Initialize AOS
+            AOS.init({
+                duration: 1000,
+                easing: 'ease-in-out',
+                once: true,
+                mirror: false
+            });
         });
 
         function loadCartCount() {

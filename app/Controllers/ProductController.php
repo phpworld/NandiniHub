@@ -18,10 +18,26 @@ class ProductController extends BaseController
 
     public function index()
     {
+        // Get filter parameters
+        $filters = [
+            'category_id' => $this->request->getGet('category'),
+            'min_price' => $this->request->getGet('min_price'),
+            'max_price' => $this->request->getGet('max_price'),
+            'search' => $this->request->getGet('q'),
+            'sort' => $this->request->getGet('sort')
+        ];
+
+        // Remove empty filters
+        $filters = array_filter($filters, function($value) {
+            return $value !== null && $value !== '';
+        });
+
         $data = [
             'title' => 'All Products - Nandini Hub',
-            'products' => $this->productModel->getActiveProducts(),
-            'categories' => $this->categoryModel->getActiveCategories()
+            'products' => $this->productModel->getProductsWithFilters($filters),
+            'categories' => $this->categoryModel->getActiveCategories(),
+            'priceRange' => $this->productModel->getPriceRange(),
+            'currentFilters' => $filters
         ];
 
         return view('products/index', $data);
@@ -30,14 +46,14 @@ class ProductController extends BaseController
     public function show($slug)
     {
         $product = $this->productModel->getProductBySlug($slug);
-        
+
         if (!$product) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Product not found');
         }
 
         // Get related products from same category
         $relatedProducts = $this->productModel->getProductsByCategory($product['category_id'], 4);
-        
+
         // Remove current product from related products
         $relatedProducts = array_filter($relatedProducts, function($p) use ($product) {
             return $p['id'] != $product['id'];
@@ -55,18 +71,32 @@ class ProductController extends BaseController
     public function category($slug)
     {
         $category = $this->categoryModel->getCategoryBySlug($slug);
-        
+
         if (!$category) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Category not found');
         }
 
-        $products = $this->productModel->getProductsByCategory($category['id']);
+        // Get filter parameters
+        $filters = [
+            'category_id' => $category['id'],
+            'min_price' => $this->request->getGet('min_price'),
+            'max_price' => $this->request->getGet('max_price'),
+            'search' => $this->request->getGet('q'),
+            'sort' => $this->request->getGet('sort')
+        ];
+
+        // Remove empty filters (except category_id)
+        $filters = array_filter($filters, function($value, $key) {
+            return $key === 'category_id' || ($value !== null && $value !== '');
+        }, ARRAY_FILTER_USE_BOTH);
 
         $data = [
             'title' => $category['name'] . ' - Nandini Hub',
             'category' => $category,
-            'products' => $products,
-            'categories' => $this->categoryModel->getActiveCategories()
+            'products' => $this->productModel->getProductsWithFilters($filters),
+            'categories' => $this->categoryModel->getActiveCategories(),
+            'priceRange' => $this->productModel->getPriceRange(),
+            'currentFilters' => $filters
         ];
 
         return view('products/category', $data);
@@ -75,18 +105,32 @@ class ProductController extends BaseController
     public function search()
     {
         $keyword = $this->request->getGet('q');
-        
+
         if (empty($keyword)) {
             return redirect()->to('/products');
         }
 
-        $products = $this->productModel->searchProducts($keyword);
+        // Get filter parameters
+        $filters = [
+            'category_id' => $this->request->getGet('category'),
+            'min_price' => $this->request->getGet('min_price'),
+            'max_price' => $this->request->getGet('max_price'),
+            'search' => $keyword,
+            'sort' => $this->request->getGet('sort')
+        ];
+
+        // Remove empty filters (except search)
+        $filters = array_filter($filters, function($value, $key) {
+            return $key === 'search' || ($value !== null && $value !== '');
+        }, ARRAY_FILTER_USE_BOTH);
 
         $data = [
             'title' => 'Search Results for "' . $keyword . '" - Nandini Hub',
             'keyword' => $keyword,
-            'products' => $products,
-            'categories' => $this->categoryModel->getActiveCategories()
+            'products' => $this->productModel->getProductsWithFilters($filters),
+            'categories' => $this->categoryModel->getActiveCategories(),
+            'priceRange' => $this->productModel->getPriceRange(),
+            'currentFilters' => $filters
         ];
 
         return view('products/search', $data);

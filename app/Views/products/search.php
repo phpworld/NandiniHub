@@ -92,7 +92,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="card product-card h-100">
                                 <div class="position-relative">
-                                    <img src="<?= $product['image'] ? esc($product['image']) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
+                                    <img src="<?= $product['image'] ? base_url('uploads/products/' . esc($product['image'])) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
                                          class="card-img-top product-image" alt="<?= esc($product['name']) ?>">
 
                                     <?php if (!empty($product['sale_price']) && $product['sale_price'] < $product['price']): ?>

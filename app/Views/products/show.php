@@ -17,7 +17,7 @@
         <!-- Product Images -->
         <div class="col-lg-6 mb-4">
             <div class="product-image-container">
-                <img src="<?= $product['image'] ? esc($product['image']) : 'https://via.placeholder.com/500x400/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
+                <img src="<?= $product['image'] ? base_url('uploads/products/' . esc($product['image'])) : 'https://via.placeholder.com/500x400/f8f9fa/6c757d?text=' . urlencode($product['name']) ?>"
                     class="img-fluid rounded shadow" alt="<?= esc($product['name']) ?>" id="mainProductImage">
 
                 <!-- Gallery thumbnails would go here if we had multiple images -->
@@ -29,7 +29,7 @@
                         ?>
                             <?php foreach ($gallery as $image): ?>
                                 <div class="col-3">
-                                    <img src="<?= esc($image) ?>" class="img-fluid rounded thumbnail-image"
+                                    <img src="<?= base_url('uploads/products/' . esc($image)) ?>" class="img-fluid rounded thumbnail-image"
                                         alt="<?= esc($product['name']) ?>" onclick="changeMainImage(this.src)">
                                 </div>
                             <?php endforeach; ?>
@@ -210,7 +210,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="card product-card h-100">
                                 <div class="position-relative">
-                                    <img src="<?= $relatedProduct['image'] ? esc($relatedProduct['image']) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($relatedProduct['name']) ?>"
+                                    <img src="<?= $relatedProduct['image'] ? base_url('uploads/products/' . esc($relatedProduct['image'])) : 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=' . urlencode($relatedProduct['name']) ?>"
                                         class="card-img-top product-image" alt="<?= esc($relatedProduct['name']) ?>">
                                 </div>
 

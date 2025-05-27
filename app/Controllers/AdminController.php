@@ -7,6 +7,7 @@ use App\Models\CategoryModel;
 use App\Models\OrderModel;
 use App\Models\OrderItemModel;
 use App\Models\UserModel;
+use App\Models\BannerModel;
 use App\Models\ReviewModel;
 
 class AdminController extends BaseController
@@ -17,6 +18,7 @@ class AdminController extends BaseController
     protected $orderItemModel;
     protected $userModel;
     protected $reviewModel;
+    protected $bannerModel;
 
     public function __construct()
     {
@@ -26,6 +28,7 @@ class AdminController extends BaseController
         $this->orderItemModel = new OrderItemModel();
         $this->userModel = new UserModel();
         $this->reviewModel = new ReviewModel();
+        $this->bannerModel = new BannerModel();
     }
 
     private function checkAdminAccess()
@@ -101,6 +104,12 @@ class AdminController extends BaseController
                 'url' => base_url('admin/reviews'),
                 'icon' => 'fas fa-star',
                 'key' => 'reviews'
+            ],
+            [
+                'title' => 'Banners',
+                'url' => base_url('admin/banners'),
+                'icon' => 'fas fa-image',
+                'key' => 'banners'
             ],
             [
                 'title' => 'Settings',
@@ -1077,5 +1086,258 @@ class AdminController extends BaseController
         // For now, just redirect back with success message
         session()->setFlashdata('success', 'Settings updated successfully');
         return redirect()->back();
+    }
+
+    // Banner Management
+    public function banners()
+    {
+        $this->checkAdminAccess();
+
+        $banners = $this->bannerModel->orderBy('sort_order', 'ASC')
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+
+        $data = array_merge($this->getAdminData('banners'), [
+            'title' => 'Manage Banners - Admin',
+            'banners' => $banners
+        ]);
+
+        return view('admin/banners/index', $data);
+    }
+
+    public function createBanner()
+    {
+        $this->checkAdminAccess();
+
+        $data = array_merge($this->getAdminData('banners'), [
+            'title' => 'Add New Banner - Admin'
+        ]);
+
+        return view('admin/banners/create', $data);
+    }
+
+    public function storeBanner()
+    {
+        $this->checkAdminAccess();
+
+        $rules = [
+            'title' => 'required|min_length[2]|max_length[255]',
+            'background_color' => 'permit_empty|regex_match[/^#[0-9A-Fa-f]{6}$/]',
+            'text_color' => 'permit_empty|regex_match[/^#[0-9A-Fa-f]{6}$/]',
+            'sort_order' => 'permit_empty|integer',
+            'image' => 'permit_empty|uploaded[image]|max_size[image,2048]|is_image[image]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $bannerData = [
+            'title' => $this->request->getPost('title'),
+            'subtitle' => $this->request->getPost('subtitle'),
+            'description' => $this->request->getPost('description'),
+            'button_text' => $this->request->getPost('button_text'),
+            'button_link' => $this->request->getPost('button_link'),
+            'button_text_2' => $this->request->getPost('button_text_2'),
+            'button_link_2' => $this->request->getPost('button_link_2'),
+            'background_color' => $this->request->getPost('background_color') ?: '#ff6b35',
+            'text_color' => $this->request->getPost('text_color') ?: '#ffffff',
+            'is_active' => $this->request->getPost('is_active') ? 1 : 0,
+            'sort_order' => $this->request->getPost('sort_order') ?: 0
+        ];
+
+        // Handle image upload
+        $imageFile = $this->request->getFile('image');
+        if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+            $imageName = $this->uploadBannerImage($imageFile);
+            if ($imageName) {
+                $bannerData['image'] = $imageName;
+            }
+        }
+
+        if ($this->bannerModel->insert($bannerData)) {
+            session()->setFlashdata('success', 'Banner created successfully');
+            return redirect()->to('/admin/banners');
+        } else {
+            // If banner creation failed and image was uploaded, delete the image
+            if (isset($bannerData['image'])) {
+                $this->deleteBannerImage($bannerData['image']);
+            }
+            session()->setFlashdata('error', 'Failed to create banner');
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function editBanner($id)
+    {
+        $this->checkAdminAccess();
+
+        $banner = $this->bannerModel->find($id);
+        if (!$banner) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Banner not found');
+        }
+
+        $data = array_merge($this->getAdminData('banners'), [
+            'title' => 'Edit Banner - Admin',
+            'banner' => $banner
+        ]);
+
+        return view('admin/banners/edit', $data);
+    }
+
+    public function updateBanner($id)
+    {
+        $this->checkAdminAccess();
+
+        $banner = $this->bannerModel->find($id);
+        if (!$banner) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Banner not found');
+        }
+
+        $rules = [
+            'title' => 'required|min_length[2]|max_length[255]',
+            'background_color' => 'permit_empty|regex_match[/^#[0-9A-Fa-f]{6}$/]',
+            'text_color' => 'permit_empty|regex_match[/^#[0-9A-Fa-f]{6}$/]',
+            'sort_order' => 'permit_empty|integer',
+            'image' => 'permit_empty|uploaded[image]|max_size[image,2048]|is_image[image]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $bannerData = [
+            'title' => $this->request->getPost('title'),
+            'subtitle' => $this->request->getPost('subtitle'),
+            'description' => $this->request->getPost('description'),
+            'button_text' => $this->request->getPost('button_text'),
+            'button_link' => $this->request->getPost('button_link'),
+            'button_text_2' => $this->request->getPost('button_text_2'),
+            'button_link_2' => $this->request->getPost('button_link_2'),
+            'background_color' => $this->request->getPost('background_color') ?: '#ff6b35',
+            'text_color' => $this->request->getPost('text_color') ?: '#ffffff',
+            'is_active' => $this->request->getPost('is_active') ? 1 : 0,
+            'sort_order' => $this->request->getPost('sort_order') ?: 0
+        ];
+
+        // Handle image upload
+        $imageFile = $this->request->getFile('image');
+        if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+            $newImageName = $this->uploadBannerImage($imageFile);
+            if ($newImageName) {
+                // Delete old image if exists
+                if (!empty($banner['image'])) {
+                    $this->deleteBannerImage($banner['image']);
+                }
+                $bannerData['image'] = $newImageName;
+            }
+        }
+
+        if ($this->bannerModel->update($id, $bannerData)) {
+            session()->setFlashdata('success', 'Banner updated successfully');
+            return redirect()->to('/admin/banners');
+        } else {
+            // If update failed and new image was uploaded, delete the new image
+            if (isset($bannerData['image']) && $bannerData['image'] !== $banner['image']) {
+                $this->deleteBannerImage($bannerData['image']);
+            }
+            session()->setFlashdata('error', 'Failed to update banner');
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function deleteBanner($id)
+    {
+        $this->checkAdminAccess();
+
+        $banner = $this->bannerModel->find($id);
+        if (!$banner) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Banner not found']);
+            }
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Banner not found');
+        }
+
+        if ($this->request->isAJAX()) {
+            if ($this->bannerModel->delete($id)) {
+                // Delete associated image
+                if (!empty($banner['image'])) {
+                    $this->deleteBannerImage($banner['image']);
+                }
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete banner']);
+            }
+        }
+
+        if ($this->bannerModel->delete($id)) {
+            // Delete associated image
+            if (!empty($banner['image'])) {
+                $this->deleteBannerImage($banner['image']);
+            }
+            session()->setFlashdata('success', 'Banner deleted successfully');
+        } else {
+            session()->setFlashdata('error', 'Failed to delete banner');
+        }
+
+        return redirect()->to('/admin/banners');
+    }
+
+    public function toggleBannerStatus($id)
+    {
+        $this->checkAdminAccess();
+
+        if (!$this->request->isAJAX()) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException();
+        }
+
+        $banner = $this->bannerModel->find($id);
+        if (!$banner) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Banner not found']);
+        }
+
+        $input = json_decode($this->request->getBody(), true);
+        $isActive = $input['is_active'] ?? 0;
+
+        if ($this->bannerModel->update($id, ['is_active' => $isActive])) {
+            return $this->response->setJSON(['success' => true]);
+        }
+
+        return $this->response->setJSON(['success' => false, 'message' => 'Failed to update banner status']);
+    }
+
+    private function uploadBannerImage($imageFile)
+    {
+        // Create uploads directory if it doesn't exist
+        $uploadPath = ROOTPATH . 'uploads/banners/';
+        if (!is_dir($uploadPath)) {
+            if (!mkdir($uploadPath, 0755, true)) {
+                log_message('error', 'Failed to create banner upload directory: ' . $uploadPath);
+                return false;
+            }
+        }
+
+        // Generate unique filename
+        $extension = $imageFile->getClientExtension();
+        $fileName = 'banner_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
+
+        try {
+            // Move the file to uploads directory
+            if ($imageFile->move($uploadPath, $fileName)) {
+                return $fileName;
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Banner image upload failed: ' . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    private function deleteBannerImage($imageName)
+    {
+        if ($imageName && file_exists(ROOTPATH . 'uploads/banners/' . $imageName)) {
+            return unlink(ROOTPATH . 'uploads/banners/' . $imageName);
+        }
+        return true;
     }
 }
