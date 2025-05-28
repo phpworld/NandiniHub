@@ -43,7 +43,9 @@
                     <div>
                         <h6 class="card-subtitle mb-2 text-muted">Pending Orders</h6>
                         <h4 class="card-title mb-0">
-                            <?= count(array_filter($orders, function($order) { return $order['status'] === 'pending'; })) ?>
+                            <?= count(array_filter($orders, function ($order) {
+                                return $order['status'] === 'pending';
+                            })) ?>
                         </h4>
                     </div>
                     <div class="text-warning">
@@ -60,7 +62,9 @@
                     <div>
                         <h6 class="card-subtitle mb-2 text-muted">Processing</h6>
                         <h4 class="card-title mb-0">
-                            <?= count(array_filter($orders, function($order) { return $order['status'] === 'processing'; })) ?>
+                            <?= count(array_filter($orders, function ($order) {
+                                return $order['status'] === 'processing';
+                            })) ?>
                         </h4>
                     </div>
                     <div class="text-info">
@@ -77,7 +81,9 @@
                     <div>
                         <h6 class="card-subtitle mb-2 text-muted">Delivered</h6>
                         <h4 class="card-title mb-0">
-                            <?= count(array_filter($orders, function($order) { return $order['status'] === 'delivered'; })) ?>
+                            <?= count(array_filter($orders, function ($order) {
+                                return $order['status'] === 'delivered';
+                            })) ?>
                         </h4>
                     </div>
                     <div class="text-success">
@@ -135,6 +141,27 @@
                                     <span class="badge bg-light text-dark">
                                         <?= $order['payment_method'] === 'cod' ? 'Cash on Delivery' : 'Online Payment' ?>
                                     </span>
+                                    <?php if ($order['payment_method'] === 'cod'): ?>
+                                        <?php
+                                        $paymentStatus = $order['payment_status'] ?? 'pending';
+                                        $badgeClass = match ($paymentStatus) {
+                                            'paid' => 'success',
+                                            'confirmed' => 'info',
+                                            'pending' => 'warning',
+                                            default => 'secondary'
+                                        };
+                                        $statusText = match ($paymentStatus) {
+                                            'paid' => 'Paid',
+                                            'confirmed' => 'Confirmed',
+                                            'pending' => 'Pending',
+                                            default => ucfirst($paymentStatus)
+                                        };
+                                        ?>
+                                        <br>
+                                        <small class="badge bg-<?= $badgeClass ?> mt-1">
+                                            <?= $statusText ?>
+                                        </small>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <span class="badge bg-<?= getOrderStatusColor($order['status']) ?>">
@@ -146,45 +173,49 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="<?= base_url('admin/orders/' . $order['id']) ?>" 
-                                           class="btn btn-sm btn-outline-primary" title="View Details">
+                                        <a href="<?= base_url('admin/orders/' . $order['id']) ?>"
+                                            class="btn btn-sm btn-outline-primary" title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <div class="dropdown">
-                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                                                    type="button" data-bs-toggle="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                type="button" data-bs-toggle="dropdown">
                                                 <i class="fas fa-cog"></i>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><h6 class="dropdown-header">Update Status</h6></li>
                                                 <li>
-                                                    <a class="dropdown-item" href="#" 
-                                                       onclick="updateOrderStatus(<?= $order['id'] ?>, 'pending')">
+                                                    <h6 class="dropdown-header">Update Status</h6>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#"
+                                                        onclick="updateOrderStatus(<?= $order['id'] ?>, 'pending')">
                                                         <i class="fas fa-clock text-warning me-2"></i>Pending
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="#" 
-                                                       onclick="updateOrderStatus(<?= $order['id'] ?>, 'processing')">
+                                                    <a class="dropdown-item" href="#"
+                                                        onclick="updateOrderStatus(<?= $order['id'] ?>, 'processing')">
                                                         <i class="fas fa-cog text-info me-2"></i>Processing
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="#" 
-                                                       onclick="updateOrderStatus(<?= $order['id'] ?>, 'shipped')">
+                                                    <a class="dropdown-item" href="#"
+                                                        onclick="updateOrderStatus(<?= $order['id'] ?>, 'shipped')">
                                                         <i class="fas fa-truck text-primary me-2"></i>Shipped
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="#" 
-                                                       onclick="updateOrderStatus(<?= $order['id'] ?>, 'delivered')">
+                                                    <a class="dropdown-item" href="#"
+                                                        onclick="updateOrderStatus(<?= $order['id'] ?>, 'delivered')">
                                                         <i class="fas fa-check-circle text-success me-2"></i>Delivered
                                                     </a>
                                                 </li>
-                                                <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <a class="dropdown-item" href="#" 
-                                                       onclick="updateOrderStatus(<?= $order['id'] ?>, 'cancelled')">
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#"
+                                                        onclick="updateOrderStatus(<?= $order['id'] ?>, 'cancelled')">
                                                         <i class="fas fa-times-circle text-danger me-2"></i>Cancelled
                                                     </a>
                                                 </li>
@@ -204,33 +235,34 @@
 
 <?= $this->section('scripts') ?>
 <script>
-function refreshOrders() {
-    location.reload();
-}
-
-function updateOrderStatus(orderId, status) {
-    if (confirm('Are you sure you want to update this order status to ' + status + '?')) {
-        // Create a form and submit it
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '<?= base_url('admin/orders') ?>/' + orderId + '/status';
-        
-        const statusInput = document.createElement('input');
-        statusInput.type = 'hidden';
-        statusInput.name = 'status';
-        statusInput.value = status;
-        
-        form.appendChild(statusInput);
-        document.body.appendChild(form);
-        form.submit();
+    function refreshOrders() {
+        location.reload();
     }
-}
+
+    function updateOrderStatus(orderId, status) {
+        if (confirm('Are you sure you want to update this order status to ' + status + '?')) {
+            // Create a form and submit it
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '<?= base_url('admin/orders') ?>/' + orderId + '/status';
+
+            const statusInput = document.createElement('input');
+            statusInput.type = 'hidden';
+            statusInput.name = 'status';
+            statusInput.value = status;
+
+            form.appendChild(statusInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
 </script>
 <?= $this->endSection() ?>
 
 <?php
 // Helper function for order status colors
-function getOrderStatusColor($status) {
+function getOrderStatusColor($status)
+{
     switch ($status) {
         case 'pending':
             return 'warning';

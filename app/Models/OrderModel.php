@@ -104,6 +104,11 @@ class OrderModel extends Model
         return $this->update($orderId, ['status' => $status]);
     }
 
+    public function updatePaymentStatus($orderId, $paymentStatus)
+    {
+        return $this->update($orderId, ['payment_status' => $paymentStatus]);
+    }
+
     public function canBeCancelled($order)
     {
         // Only pending orders can be cancelled

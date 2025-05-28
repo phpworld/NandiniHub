@@ -107,7 +107,9 @@ $routes->group('admin', function ($routes) {
     // Order management
     $routes->get('orders', 'AdminController::orders');
     $routes->get('orders/(:num)', 'AdminController::viewOrder/$1');
+    $routes->get('orders/(:num)/print', 'AdminController::printOrder/$1');
     $routes->post('orders/(:num)/status', 'AdminController::updateOrderStatus/$1');
+    $routes->post('orders/(:num)/payment-status', 'AdminController::updatePaymentStatus/$1');
 
     // Review management
     $routes->get('reviews', 'AdminController::reviews');

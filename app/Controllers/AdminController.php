@@ -959,6 +959,26 @@ class AdminController extends BaseController
         return view('admin/orders/view', $data);
     }
 
+    public function printOrder($id)
+    {
+        $this->checkAdminAccess();
+
+        $order = $this->orderModel->getOrderWithDetails($id);
+        if (!$order) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Order not found');
+        }
+
+        $orderItems = $this->orderItemModel->getOrderItems($id);
+
+        $data = [
+            'title' => 'Invoice #' . $order['order_number'],
+            'order' => $order,
+            'orderItems' => $orderItems
+        ];
+
+        return view('admin/orders/print', $data);
+    }
+
     public function updateOrderStatus($id)
     {
         $this->checkAdminAccess();
@@ -969,6 +989,21 @@ class AdminController extends BaseController
             session()->setFlashdata('success', 'Order status updated successfully');
         } else {
             session()->setFlashdata('error', 'Failed to update order status');
+        }
+
+        return redirect()->back();
+    }
+
+    public function updatePaymentStatus($id)
+    {
+        $this->checkAdminAccess();
+
+        $paymentStatus = $this->request->getPost('payment_status');
+
+        if ($this->orderModel->updatePaymentStatus($id, $paymentStatus)) {
+            session()->setFlashdata('success', 'Payment status updated successfully');
+        } else {
+            session()->setFlashdata('error', 'Failed to update payment status');
         }
 
         return redirect()->back();

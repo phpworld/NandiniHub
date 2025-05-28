@@ -1,7 +1,7 @@
 <?= $this->extend('admin/layout/main') ?>
 
 <?= $this->section('breadcrumb') ?>
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb" class="no-print">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= base_url('admin') ?>">Dashboard</a></li>
         <li class="breadcrumb-item"><a href="<?= base_url('admin/orders') ?>">Orders</a></li>
@@ -17,9 +17,9 @@
         <a href="<?= base_url('admin/orders') ?>" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-1"></i>Back to Orders
         </a>
-        <button class="btn btn-outline-primary" onclick="window.print()">
-            <i class="fas fa-print me-1"></i>Print
-        </button>
+        <a href="<?= base_url('admin/orders/' . $order['id'] . '/print') ?>" target="_blank" class="btn btn-outline-primary">
+            <i class="fas fa-print me-1"></i>Print Invoice
+        </a>
     </div>
 </div>
 
@@ -54,9 +54,31 @@
                             <tr>
                                 <td><strong>Payment Status:</strong></td>
                                 <td>
-                                    <span class="badge bg-<?= $order['payment_status'] === 'paid' ? 'success' : 'warning' ?>">
-                                        <?= ucfirst($order['payment_status'] ?? 'pending') ?>
+                                    <?php
+                                    $paymentStatus = $order['payment_status'] ?? 'pending';
+                                    $badgeClass = match ($paymentStatus) {
+                                        'paid' => 'success',
+                                        'confirmed' => 'info',
+                                        'pending' => 'warning',
+                                        default => 'secondary'
+                                    };
+                                    $statusText = match ($paymentStatus) {
+                                        'paid' => 'Paid',
+                                        'confirmed' => 'Confirmed',
+                                        'pending' => 'Pending',
+                                        default => ucfirst($paymentStatus)
+                                    };
+                                    ?>
+                                    <span class="badge bg-<?= $badgeClass ?>">
+                                        <?= $statusText ?>
                                     </span>
+                                    <?php if ($order['payment_method'] === 'cod' && $paymentStatus === 'pending'): ?>
+                                        <small class="text-muted d-block">Cash not received</small>
+                                    <?php elseif ($order['payment_method'] === 'cod' && $paymentStatus === 'confirmed'): ?>
+                                        <small class="text-success d-block">Cash received</small>
+                                    <?php elseif ($order['payment_method'] === 'cod' && $paymentStatus === 'paid'): ?>
+                                        <small class="text-success d-block">Payment completed</small>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         </table>
@@ -108,12 +130,12 @@
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <?php if (!empty($item['product_image'])): ?>
-                                                    <img src="<?= base_url('uploads/products/' . $item['product_image']) ?>" 
-                                                         alt="<?= esc($item['product_name']) ?>" 
-                                                         class="me-3" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                    <img src="<?= base_url('uploads/products/' . $item['product_image']) ?>"
+                                                        alt="<?= esc($item['product_name']) ?>"
+                                                        class="me-3" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                                 <?php else: ?>
-                                                    <div class="me-3 bg-light d-flex align-items-center justify-content-center" 
-                                                         style="width: 50px; height: 50px; border-radius: 5px;">
+                                                    <div class="me-3 bg-light d-flex align-items-center justify-content-center"
+                                                        style="width: 50px; height: 50px; border-radius: 5px;">
                                                         <i class="fas fa-image text-muted"></i>
                                                     </div>
                                                 <?php endif; ?>
@@ -233,9 +255,11 @@
                 <h6 class="mb-0">Order Actions</h6>
             </div>
             <div class="card-body">
+                <!-- Order Status Update -->
                 <form method="POST" action="<?= base_url('admin/orders/' . $order['id'] . '/status') ?>">
+                    <?= csrf_field() ?>
                     <div class="mb-3">
-                        <label for="status" class="form-label">Update Status</label>
+                        <label for="status" class="form-label">Update Order Status</label>
                         <select class="form-select" id="status" name="status">
                             <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
                             <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Processing</option>
@@ -244,14 +268,48 @@
                             <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-save me-1"></i>Update Status
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-save me-1"></i>Update Order Status
                     </button>
                 </form>
-                
+
+                <!-- Payment Status Update (for COD orders) -->
+                <?php if ($order['payment_method'] === 'cod'): ?>
+                    <div class="border-top pt-3">
+                        <form method="POST" action="<?= base_url('admin/orders/' . $order['id'] . '/payment-status') ?>">
+                            <?= csrf_field() ?>
+                            <div class="mb-3">
+                                <label for="payment_status" class="form-label">
+                                    <i class="fas fa-money-bill-wave me-1"></i>Payment Status (COD)
+                                </label>
+                                <select class="form-select" id="payment_status" name="payment_status">
+                                    <option value="pending" <?= ($order['payment_status'] ?? 'pending') === 'pending' ? 'selected' : '' ?>>
+                                        Pending - Payment not received
+                                    </option>
+                                    <option value="confirmed" <?= ($order['payment_status'] ?? '') === 'confirmed' ? 'selected' : '' ?>>
+                                        Confirmed - Payment received
+                                    </option>
+                                    <option value="paid" <?= ($order['payment_status'] ?? '') === 'paid' ? 'selected' : '' ?>>
+                                        Paid - Payment completed
+                                    </option>
+                                </select>
+                                <div class="form-text">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Update payment status when cash is received from customer
+                                    </small>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-credit-card me-1"></i>Update Payment Status
+                            </button>
+                        </form>
+                    </div>
+                <?php endif; ?>
+
                 <?php if (!empty($order['notes'])): ?>
-                    <div class="mt-3">
-                        <h6>Order Notes</h6>
+                    <div class="mt-3 border-top pt-3">
+                        <h6><i class="fas fa-sticky-note me-1"></i>Order Notes</h6>
                         <p class="text-muted small"><?= esc($order['notes']) ?></p>
                     </div>
                 <?php endif; ?>
@@ -263,7 +321,8 @@
 
 <?php
 // Helper function for order status colors
-function getOrderStatusColor($status) {
+function getOrderStatusColor($status)
+{
     switch ($status) {
         case 'pending':
             return 'warning';
