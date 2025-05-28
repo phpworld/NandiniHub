@@ -35,10 +35,10 @@ class ReviewController extends BaseController
         }
 
         $userId = session()->get('user_id');
-        
+
         // Check if user can review this product
         if (!$this->reviewModel->canUserReview($product['id'], $userId)) {
-            session()->setFlashdata('error', 'You can only review products you have purchased and received.');
+            session()->setFlashdata('error', 'You can only review products you have purchased, or you have already reviewed this product.');
             return redirect()->to('/product/' . $productSlug);
         }
 
@@ -72,17 +72,17 @@ class ReviewController extends BaseController
 
         // Check if user can review this product
         if (!$this->reviewModel->canUserReview($productId, $userId)) {
-            session()->setFlashdata('error', 'You can only review products you have purchased and received.');
+            session()->setFlashdata('error', 'You can only review products you have purchased, or you have already reviewed this product.');
             return redirect()->back();
         }
 
         // Find the order for verification
         $orderItem = $this->orderItemModel->select('order_items.order_id')
-                                         ->join('orders', 'orders.id = order_items.order_id')
-                                         ->where('order_items.product_id', $productId)
-                                         ->where('orders.user_id', $userId)
-                                         ->where('orders.status', 'delivered')
-                                         ->first();
+            ->join('orders', 'orders.id = order_items.order_id')
+            ->where('order_items.product_id', $productId)
+            ->where('orders.user_id', $userId)
+            ->whereIn('orders.status', ['delivered', 'processing', 'shipped'])
+            ->first();
 
         $reviewData = [
             'product_id' => $productId,
@@ -97,7 +97,7 @@ class ReviewController extends BaseController
 
         if ($this->reviewModel->insert($reviewData)) {
             session()->setFlashdata('success', 'Thank you for your review! It has been submitted successfully.');
-            
+
             $product = $this->productModel->find($productId);
             return redirect()->to('/product/' . $product['slug']);
         } else {

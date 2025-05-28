@@ -43,10 +43,10 @@ class ReviewModel extends Model
     public function getProductReviews($productId, $limit = null)
     {
         $builder = $this->select('reviews.*, users.first_name, users.last_name')
-                       ->join('users', 'users.id = reviews.user_id')
-                       ->where('reviews.product_id', $productId)
-                       ->where('reviews.is_approved', 1)
-                       ->orderBy('reviews.created_at', 'DESC');
+            ->join('users', 'users.id = reviews.user_id')
+            ->where('reviews.product_id', $productId)
+            ->where('reviews.is_approved', 1)
+            ->orderBy('reviews.created_at', 'DESC');
 
         if ($limit) {
             $builder->limit($limit);
@@ -84,8 +84,8 @@ class ReviewModel extends Model
     public function getUserReview($productId, $userId)
     {
         return $this->where('product_id', $productId)
-                   ->where('user_id', $userId)
-                   ->first();
+            ->where('user_id', $userId)
+            ->first();
     }
 
     public function canUserReview($productId, $userId)
@@ -93,13 +93,14 @@ class ReviewModel extends Model
         // Check if user has purchased this product
         $orderItemModel = new OrderItemModel();
         $orderModel = new OrderModel();
-        
+
+        // Allow reviews for any purchased product (not just delivered)
         $hasPurchased = $orderItemModel->select('order_items.*')
-                                      ->join('orders', 'orders.id = order_items.order_id')
-                                      ->where('order_items.product_id', $productId)
-                                      ->where('orders.user_id', $userId)
-                                      ->where('orders.status', 'delivered')
-                                      ->first();
+            ->join('orders', 'orders.id = order_items.order_id')
+            ->where('order_items.product_id', $productId)
+            ->where('orders.user_id', $userId)
+            ->whereIn('orders.status', ['delivered', 'processing', 'shipped'])
+            ->first();
 
         // Check if user has already reviewed
         $hasReviewed = $this->getUserReview($productId, $userId);
@@ -107,24 +108,32 @@ class ReviewModel extends Model
         return $hasPurchased && !$hasReviewed;
     }
 
+    public function canUserReviewAnyProduct($productId, $userId)
+    {
+        // For testing: Allow any logged-in user to review any product
+        // Check if user has already reviewed
+        $hasReviewed = $this->getUserReview($productId, $userId);
+        return !$hasReviewed;
+    }
+
     public function getRecentReviews($limit = 10)
     {
         return $this->select('reviews.*, users.first_name, users.last_name, products.name as product_name, products.slug as product_slug')
-                   ->join('users', 'users.id = reviews.user_id')
-                   ->join('products', 'products.id = reviews.product_id')
-                   ->where('reviews.is_approved', 1)
-                   ->orderBy('reviews.created_at', 'DESC')
-                   ->limit($limit)
-                   ->findAll();
+            ->join('users', 'users.id = reviews.user_id')
+            ->join('products', 'products.id = reviews.product_id')
+            ->where('reviews.is_approved', 1)
+            ->orderBy('reviews.created_at', 'DESC')
+            ->limit($limit)
+            ->findAll();
     }
 
     public function getPendingReviews($limit = null)
     {
         $builder = $this->select('reviews.*, users.first_name, users.last_name, products.name as product_name')
-                       ->join('users', 'users.id = reviews.user_id')
-                       ->join('products', 'products.id = reviews.product_id')
-                       ->where('reviews.is_approved', 0)
-                       ->orderBy('reviews.created_at', 'DESC');
+            ->join('users', 'users.id = reviews.user_id')
+            ->join('products', 'products.id = reviews.product_id')
+            ->where('reviews.is_approved', 0)
+            ->orderBy('reviews.created_at', 'DESC');
 
         if ($limit) {
             $builder->limit($limit);

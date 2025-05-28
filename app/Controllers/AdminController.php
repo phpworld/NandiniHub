@@ -34,8 +34,7 @@ class AdminController extends BaseController
     private function checkAdminAccess()
     {
         if (!session()->get('user_id')) {
-            session()->set('redirect_to', current_url());
-            // For now, let's create a temporary admin session for testing
+            // For testing: automatically set admin session
             // In production, this should redirect to login
             session()->set('user_id', 1); // Admin user ID from database
         }
@@ -977,13 +976,69 @@ class AdminController extends BaseController
     {
         $this->checkAdminAccess();
 
-        $pendingReviews = $this->reviewModel->getPendingReviews();
-        $recentReviews = $this->reviewModel->getRecentReviews(20);
+        // Get pagination parameters
+        $page = (int) ($this->request->getGet('page') ?? 1);
+        $perPage = 10; // Reviews per page
+        $status = $this->request->getGet('status'); // 'pending', 'approved', or 'all'
+        $search = $this->request->getGet('search'); // Search term
+
+        // Get pending reviews (only show when not filtering or when filtering pending)
+        $pendingReviews = [];
+        if (empty($status) || $status === 'all' || $status === 'pending') {
+            $pendingReviews = $this->reviewModel->getPendingReviews();
+        }
+
+        // Get paginated reviews based on status filter
+        $reviewsQuery = $this->reviewModel->select('reviews.*, users.first_name, users.last_name, products.name as product_name, products.slug as product_slug')
+            ->join('users', 'users.id = reviews.user_id')
+            ->join('products', 'products.id = reviews.product_id')
+            ->orderBy('reviews.created_at', 'DESC');
+
+        // Apply status filter
+        if ($status === 'pending') {
+            $reviewsQuery->where('reviews.is_approved', 0);
+        } elseif ($status === 'approved') {
+            $reviewsQuery->where('reviews.is_approved', 1);
+        }
+        // If status is 'all' or not set, show all reviews
+
+        // Apply search filter
+        if (!empty($search)) {
+            $reviewsQuery->groupStart()
+                ->like('products.name', $search)
+                ->orLike('reviews.title', $search)
+                ->orLike('reviews.review', $search)
+                ->orLike('CONCAT(users.first_name, " ", users.last_name)', $search)
+                ->groupEnd();
+        }
+
+        // Get total count for pagination
+        $totalReviews = $reviewsQuery->countAllResults(false);
+
+        // Get paginated results
+        $reviews = $reviewsQuery->paginate($perPage, 'default', $page);
+
+        // Get pager
+        $pager = $this->reviewModel->pager;
+
+        // Get counts for tabs
+        $allReviewsCount = $this->reviewModel->countAllResults();
+        $pendingCount = $this->reviewModel->where('is_approved', 0)->countAllResults();
+        $approvedCount = $this->reviewModel->where('is_approved', 1)->countAllResults();
 
         $data = array_merge($this->getAdminData('reviews'), [
             'title' => 'Manage Reviews - Admin',
             'pendingReviews' => $pendingReviews,
-            'recentReviews' => $recentReviews
+            'reviews' => $reviews,
+            'pager' => $pager,
+            'currentStatus' => $status,
+            'currentSearch' => $search,
+            'totalReviews' => $totalReviews,
+            'allReviewsCount' => $allReviewsCount,
+            'pendingCount' => $pendingCount,
+            'approvedCount' => $approvedCount,
+            'currentPage' => $page,
+            'perPage' => $perPage
         ]);
 
         return view('admin/reviews/index', $data);
@@ -1006,13 +1061,36 @@ class AdminController extends BaseController
     {
         $this->checkAdminAccess();
 
-        if ($this->reviewModel->rejectReview($id)) {
-            session()->setFlashdata('success', 'Review rejected successfully');
+        // Instead of just rejecting, delete the review automatically
+        if ($this->reviewModel->delete($id)) {
+            session()->setFlashdata('success', 'Review rejected and deleted successfully');
         } else {
             session()->setFlashdata('error', 'Failed to reject review');
         }
 
         return redirect()->back();
+    }
+
+    public function deleteReview($id)
+    {
+        $this->checkAdminAccess();
+
+        if (!$this->request->isAJAX()) {
+            // Non-AJAX request
+            if ($this->reviewModel->delete($id)) {
+                session()->setFlashdata('success', 'Review deleted successfully');
+            } else {
+                session()->setFlashdata('error', 'Failed to delete review');
+            }
+            return redirect()->back();
+        }
+
+        // AJAX request
+        if ($this->reviewModel->delete($id)) {
+            return $this->response->setJSON(['success' => true]);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete review']);
+        }
     }
 
     // User Management
