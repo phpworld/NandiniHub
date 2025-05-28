@@ -30,45 +30,45 @@
             <div class="card-body">
                 <form action="<?= base_url('admin/settings') ?>" method="POST">
                     <?= csrf_field() ?>
-                    
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="site_name" class="form-label">Site Name</label>
-                            <input type="text" class="form-control" id="site_name" name="site_name" 
-                                   value="Nandini Hub" required>
+                            <input type="text" class="form-control" id="site_name" name="site_name"
+                                value="<?= esc($settings['site_name'] ?? 'Nandini Hub') ?>" required>
                         </div>
-                        
+
                         <div class="col-md-6 mb-3">
                             <label for="site_tagline" class="form-label">Site Tagline</label>
-                            <input type="text" class="form-control" id="site_tagline" name="site_tagline" 
-                                   value="Your Trusted Shopping Destination">
+                            <input type="text" class="form-control" id="site_tagline" name="site_tagline"
+                                value="<?= esc($settings['site_tagline'] ?? 'Your Trusted Shopping Destination') ?>">
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="site_description" class="form-label">Site Description</label>
-                        <textarea class="form-control" id="site_description" name="site_description" 
-                                  rows="3">Nandini Hub is your one-stop destination for quality products at affordable prices.</textarea>
+                        <textarea class="form-control" id="site_description" name="site_description"
+                            rows="3"><?= esc($settings['site_description'] ?? 'Nandini Hub is your one-stop destination for quality products at affordable prices.') ?></textarea>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="contact_email" class="form-label">Contact Email</label>
-                            <input type="email" class="form-control" id="contact_email" name="contact_email" 
-                                   value="info@nandinihub.com">
+                            <input type="email" class="form-control" id="contact_email" name="contact_email"
+                                value="<?= esc($settings['contact_email'] ?? 'info@nandinihub.com') ?>">
                         </div>
-                        
+
                         <div class="col-md-6 mb-3">
                             <label for="contact_phone" class="form-label">Contact Phone</label>
-                            <input type="text" class="form-control" id="contact_phone" name="contact_phone" 
-                                   value="+91 9876543210">
+                            <input type="text" class="form-control" id="contact_phone" name="contact_phone"
+                                value="<?= esc($settings['contact_phone'] ?? '+91 9876543210') ?>">
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="address" class="form-label">Business Address</label>
-                        <textarea class="form-control" id="address" name="address" 
-                                  rows="2">123 Business Street, City, State - 123456</textarea>
+                        <textarea class="form-control" id="address" name="address"
+                            rows="2">123 Business Street, City, State - 123456</textarea>
                     </div>
 
                     <div class="row">
@@ -80,7 +80,7 @@
                                 <option value="EUR">Euro (€)</option>
                             </select>
                         </div>
-                        
+
                         <div class="col-md-4 mb-3">
                             <label for="timezone" class="form-label">Timezone</label>
                             <select class="form-select" id="timezone" name="timezone">
@@ -89,7 +89,7 @@
                                 <option value="America/New_York">America/New_York</option>
                             </select>
                         </div>
-                        
+
                         <div class="col-md-4 mb-3">
                             <label for="date_format" class="form-label">Date Format</label>
                             <select class="form-select" id="date_format" name="date_format">
@@ -109,6 +109,66 @@
             </div>
         </div>
 
+        <!-- Google Analytics Settings -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fab fa-google me-2"></i>Google Analytics
+                </h5>
+            </div>
+            <div class="card-body">
+                <form action="<?= base_url('admin/settings') ?>" method="POST">
+                    <?= csrf_field() ?>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="google_analytics_enabled"
+                                name="google_analytics_enabled" value="1"
+                                <?= ($settings['google_analytics_enabled'] ?? false) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="google_analytics_enabled">
+                                <strong>Enable Google Analytics</strong>
+                            </label>
+                        </div>
+                        <small class="text-muted">Enable or disable Google Analytics tracking on your website</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="google_analytics_id" class="form-label">
+                            Google Analytics Measurement ID
+                        </label>
+                        <input type="text" class="form-control" id="google_analytics_id"
+                            name="google_analytics_id"
+                            value="<?= esc($settings['google_analytics_id'] ?? '') ?>"
+                            placeholder="G-XXXXXXXXXX">
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Enter your Google Analytics 4 Measurement ID (e.g., G-XXXXXXXXXX).
+                            You can find this in your Google Analytics account under Admin > Data Streams.
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-lightbulb me-2"></i>How to get your Google Analytics ID:
+                        </h6>
+                        <ol class="mb-0">
+                            <li>Go to <a href="https://analytics.google.com" target="_blank">Google Analytics</a></li>
+                            <li>Select your property or create a new one</li>
+                            <li>Go to Admin > Data Streams</li>
+                            <li>Select your web stream</li>
+                            <li>Copy the Measurement ID (starts with G-)</li>
+                        </ol>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Analytics Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Email Settings -->
         <div class="card mb-4">
             <div class="card-header">
@@ -119,14 +179,14 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="smtp_host" class="form-label">SMTP Host</label>
-                            <input type="text" class="form-control" id="smtp_host" name="smtp_host" 
-                                   value="smtp.gmail.com">
+                            <input type="text" class="form-control" id="smtp_host" name="smtp_host"
+                                value="smtp.gmail.com">
                         </div>
-                        
+
                         <div class="col-md-6 mb-3">
                             <label for="smtp_port" class="form-label">SMTP Port</label>
-                            <input type="number" class="form-control" id="smtp_port" name="smtp_port" 
-                                   value="587">
+                            <input type="number" class="form-control" id="smtp_port" name="smtp_port"
+                                value="587">
                         </div>
                     </div>
 
@@ -135,7 +195,7 @@
                             <label for="smtp_username" class="form-label">SMTP Username</label>
                             <input type="text" class="form-control" id="smtp_username" name="smtp_username">
                         </div>
-                        
+
                         <div class="col-md-6 mb-3">
                             <label for="smtp_password" class="form-label">SMTP Password</label>
                             <input type="password" class="form-control" id="smtp_password" name="smtp_password">
@@ -271,10 +331,10 @@
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
-        
+
         const container = document.querySelector('.content-wrapper');
         container.insertBefore(alertDiv, container.firstChild);
-        
+
         setTimeout(() => {
             alertDiv.remove();
         }, 5000);

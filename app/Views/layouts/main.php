@@ -7,6 +7,27 @@
     <title><?= $title ?? 'Nandini Hub - Premium Puja Samagri Online' ?></title>
     <meta name="description" content="<?= $meta_description ?? 'Premium quality puja samagri including agarbatti, dhoop, diyas, and all essential items for your spiritual needs.' ?>">
 
+    <?php
+    // Load Google Analytics if enabled
+    $settingModel = new \App\Models\SettingModel();
+    $gaEnabled = $settingModel->getSetting('google_analytics_enabled', false);
+    $gaId = $settingModel->getSetting('google_analytics_id', '');
+
+    if ($gaEnabled && !empty($gaId)):
+    ?>
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=<?= esc($gaId) ?>"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', '<?= esc($gaId) ?>');
+        </script>
+    <?php endif; ?>
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -336,8 +357,8 @@
                                     <a class="dropdown-item d-flex align-items-center" href="<?= base_url('category/' . esc($category['slug'])) ?>">
                                         <?php if (!empty($category['image'])): ?>
                                             <img src="<?= base_url('uploads/categories/' . esc($category['image'])) ?>"
-                                                 alt="<?= esc($category['name']) ?>"
-                                                 class="rounded me-2" style="width: 20px; height: 20px; object-fit: cover;">
+                                                alt="<?= esc($category['name']) ?>"
+                                                class="rounded me-2" style="width: 20px; height: 20px; object-fit: cover;">
                                         <?php else: ?>
                                             <?php
                                             $icons = [
@@ -358,7 +379,9 @@
                                     </a>
                                 </li>
                             <?php endforeach; ?>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li>
                                 <a class="dropdown-item" href="<?= base_url('products') ?>">
                                     <i class="fas fa-th-large me-2 text-primary" style="width: 20px;"></i>

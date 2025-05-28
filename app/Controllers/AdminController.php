@@ -9,6 +9,7 @@ use App\Models\OrderItemModel;
 use App\Models\UserModel;
 use App\Models\BannerModel;
 use App\Models\ReviewModel;
+use App\Models\SettingModel;
 
 class AdminController extends BaseController
 {
@@ -19,6 +20,7 @@ class AdminController extends BaseController
     protected $userModel;
     protected $reviewModel;
     protected $bannerModel;
+    protected $settingModel;
 
     public function __construct()
     {
@@ -29,6 +31,7 @@ class AdminController extends BaseController
         $this->userModel = new UserModel();
         $this->reviewModel = new ReviewModel();
         $this->bannerModel = new BannerModel();
+        $this->settingModel = new SettingModel();
     }
 
     private function checkAdminAccess()
@@ -1159,8 +1162,12 @@ class AdminController extends BaseController
     {
         $this->checkAdminAccess();
 
+        // Get all settings from database
+        $settings = $this->settingModel->getAllSettings();
+
         $data = array_merge($this->getAdminData('settings'), [
-            'title' => 'Site Settings - Admin'
+            'title' => 'Site Settings - Admin',
+            'settings' => $settings
         ]);
 
         return view('admin/settings/index', $data);
@@ -1170,9 +1177,37 @@ class AdminController extends BaseController
     {
         $this->checkAdminAccess();
 
-        // This would typically update site configuration
-        // For now, just redirect back with success message
-        session()->setFlashdata('success', 'Settings updated successfully');
+        $rules = [
+            'site_name' => 'required|min_length[2]|max_length[255]',
+            'site_tagline' => 'permit_empty|max_length[255]',
+            'site_description' => 'permit_empty|max_length[1000]',
+            'contact_email' => 'permit_empty|valid_email',
+            'contact_phone' => 'permit_empty|max_length[20]',
+            'google_analytics_id' => 'permit_empty|max_length[50]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Get form data
+        $settingsData = [
+            'site_name' => $this->request->getPost('site_name'),
+            'site_tagline' => $this->request->getPost('site_tagline'),
+            'site_description' => $this->request->getPost('site_description'),
+            'contact_email' => $this->request->getPost('contact_email'),
+            'contact_phone' => $this->request->getPost('contact_phone'),
+            'google_analytics_id' => $this->request->getPost('google_analytics_id'),
+            'google_analytics_enabled' => $this->request->getPost('google_analytics_enabled') ? true : false,
+        ];
+
+        // Update settings in database
+        if ($this->settingModel->updateSettings($settingsData)) {
+            session()->setFlashdata('success', 'Settings updated successfully');
+        } else {
+            session()->setFlashdata('error', 'Failed to update settings');
+        }
+
         return redirect()->back();
     }
 

@@ -55,4 +55,37 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = service('session');
     }
+
+    /**
+     * Get a setting value from the database
+     */
+    protected function getSetting(string $key, $default = null)
+    {
+        static $settingModel = null;
+
+        if ($settingModel === null) {
+            $settingModel = new \App\Models\SettingModel();
+        }
+
+        return $settingModel->getSetting($key, $default);
+    }
+
+    /**
+     * Get all settings as an array
+     */
+    protected function getAllSettings(): array
+    {
+        static $settingModel = null;
+        static $settings = null;
+
+        if ($settingModel === null) {
+            $settingModel = new \App\Models\SettingModel();
+        }
+
+        if ($settings === null) {
+            $settings = $settingModel->getAllSettings();
+        }
+
+        return $settings;
+    }
 }
